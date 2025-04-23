@@ -21,7 +21,8 @@ from datasets import load_dataset, concatenate_datasets
 
 print("Start loading dataset", flush=True)
 
-dataset = load_dataset("nvidia/Llama-Nemotron-Post-Training-Dataset-v1")
+# dataset = load_dataset("nvidia/Llama-Nemotron-Post-Training-Dataset-v1")  # This redirects to "nvidia/Llama-Nemotron-Post-Training-Dataset" and the version is v1.1
+dataset = load_dataset("nvidia/Llama-Nemotron-Post-Training-Dataset", revision="ed905e6239c9d191e4c965a403dde07a5383b5eb")  # This is v1
 
 print("Finished loading dataset", flush=True)
 
