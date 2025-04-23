@@ -19,11 +19,11 @@ data_prep_num_proc = 8
 # %%
 from datasets import load_dataset, concatenate_datasets
 
-print("Start loading dataset")
+print("Start loading dataset", flush=True)
 
 dataset = load_dataset("nvidia/Llama-Nemotron-Post-Training-Dataset-v1")
 
-print("Finished loading dataset")
+print("Finished loading dataset", flush=True)
 
 # %% [markdown]
 # We then take each category in the SFT data subset, and generalize the samples used in Nemotron training:
@@ -41,22 +41,22 @@ def generalize_sample(sample):
 
 generic_samples_datasets = []
 for split in dataset.keys():
-    print(f"Processing {split} samples")
+    print(f"Processing {split} samples", flush=True)
     new_split = dataset[split].filter(lambda sample: sample["used_in_training"] == 'yes', num_proc=data_prep_num_proc)
-    print(f"Adding {len(new_split)} samples")
+    print(f"Adding {len(new_split)} samples", flush=True)
     new_samples = new_split.map(generalize_sample, remove_columns=list(new_split[0].keys()), num_proc=data_prep_num_proc)
     generic_samples_datasets.append(new_samples)
-    print("Samples added\n")
+    print("Samples added\n", flush=True)
 
 # %% [markdown]
 # Once we’ve got all of our reduced, generalized samples, we can re-combine them into a single dataset and save as a jsonl:
 
 # %%
-print("Writing generic messages-format data")
+print("Writing generic messages-format data", flush=True)
 generic_samples = concatenate_datasets(generic_samples_datasets)
-print(generic_samples)
+print(generic_samples, flush=True)
 generic_samples.to_json("nemotron.jsonl", lines=True, orient="records", num_proc=data_prep_num_proc)
-print("Write complete!")
+print("Write complete!", flush=True)
 
 # %% [markdown]
 # This leaves us with 1.7 million samples of math, science, code, chat, and safety. This includes examples with and without detailed reasoning. With this file, we are ready to start SFT.
@@ -122,7 +122,11 @@ train_args = TrainingArgs(
 # Finally, we kick off SFT via the run_training function:
 
 # %%
+print("Start training", flush=True)
+
 run_training(torch_args=torch_args,train_args=train_args)
+
+print("Finished training", flush=True)
 
 # %% [markdown]
 # Upon completion, we have n (n=num_epochs) Huggingface-Format checkpoints in `experiments/training_output/hf_format`. The full run logs and metrics will also be recorded in `experiments/training_output`. Running the final training as a python script rather than in a notebook may help with progress bar writing to stdout.
