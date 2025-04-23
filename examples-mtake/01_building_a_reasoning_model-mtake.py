@@ -9,7 +9,11 @@
 
 # %% [markdown]
 # ## Data Preparation
-# 
+
+# %%
+data_prep_num_proc = 8
+
+# %% [markdown]
 # To accomplish this, we use the open source Nemotron Post-Training Dataset, but it cannot be used as-is. The dataset is specific to Llama, and includes 15 million samples (most of which were unused in Nemotron training), so we will convert and filter the dataset to a more digestible messages-format set of samples, usable by any model. We start by loading the dataset via Huggingface Datasets:
 
 # %%
@@ -33,9 +37,9 @@ def generalize_sample(sample):
 generic_samples_datasets = []
 for split in dataset.keys():
     print(f"Processing {split} samples")
-    new_split = dataset[split].filter(lambda sample: sample["used_in_training"] == 'yes', num_proc=8)
+    new_split = dataset[split].filter(lambda sample: sample["used_in_training"] == 'yes', num_proc=data_prep_num_proc)
     print(f"Adding {len(new_split)} samples")
-    new_samples = new_split.map(generalize_sample, remove_columns=list(new_split[0].keys()), num_proc=8)
+    new_samples = new_split.map(generalize_sample, remove_columns=list(new_split[0].keys()), num_proc=data_prep_num_proc)
     generic_samples_datasets.append(new_samples)
     print("Samples added\n")
 
@@ -46,14 +50,20 @@ for split in dataset.keys():
 print("Writing generic messages-format data")
 generic_samples = concatenate_datasets(generic_samples_datasets)
 print(generic_samples)
-generic_samples.to_json("nemotron.jsonl", lines=True, orient="records", num_proc=8)
+generic_samples.to_json("nemotron.jsonl", lines=True, orient="records", num_proc=data_prep_num_proc)
 print("Write complete!")
 
 # %% [markdown]
 # This leaves us with 1.7 million samples of math, science, code, chat, and safety. This includes examples with and without detailed reasoning. With this file, we are ready to start SFT.
-# 
+
+# %% [markdown]
 # ## Fine-Tuning
-# 
+
+# %%
+fine_tune_nproc_per_node = 8
+fine_tune_nnodes = 1
+
+# %% [markdown]
 # For fine-tuning, we use the Instructlab Training library, built for optimal and efficient fine-tuning on any messages-format data. Using the python interface, we are able to launch the model training.
 # 
 # In this case, we ensure that we install off of main, to get the latest generic Causal LM support:
@@ -73,10 +83,10 @@ from instructlab.training.main_ds import run_training
 
 # %%
 torch_args = TorchrunArgs(
-nproc_per_node=8,
-	nnodes=1,
+	nproc_per_node=fine_tune_nproc_per_node,
+	nnodes=fine_tune_nnodes,
  	node_rank=0,
-       rdzv_id=123,
+	rdzv_id=123,
  	rdzv_endpoint="0.0.0.0:8888",
 )
 
