@@ -18,7 +18,12 @@ data_prep_num_proc = 8
 
 # %%
 from datasets import load_dataset, concatenate_datasets
+
+print("Start loading dataset")
+
 dataset = load_dataset("nvidia/Llama-Nemotron-Post-Training-Dataset-v1")
+
+print("Finished loading dataset")
 
 # %% [markdown]
 # We then take each category in the SFT data subset, and generalize the samples used in Nemotron training:
