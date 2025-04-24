@@ -8,23 +8,43 @@
 # 
 
 # %% [markdown]
+# ## Environment Variables
+
+# %%
+import os
+
+os.environ['PYTORCH_CUDA_ALLOC_CONF'] = "expandable_segments:True"
+
+# %% [markdown]
+# ## Constants
+
+# %%
+data_path = "nemotron.jsonl"
+
+# %% [markdown]
 # ## Data Preparation
 
 # %%
-data_prep_num_proc = 8
+prep_data_num_proc = 8
+
+# %%
+force_prep_data = False
+
+prep_data = not os.path.isfile(data_path) or force_prep_data
 
 # %% [markdown]
 # To accomplish this, we use the open source Nemotron Post-Training Dataset, but it cannot be used as-is. The dataset is specific to Llama, and includes 15 million samples (most of which were unused in Nemotron training), so we will convert and filter the dataset to a more digestible messages-format set of samples, usable by any model. We start by loading the dataset via Huggingface Datasets:
 
 # %%
-from datasets import load_dataset, concatenate_datasets
+if prep_data:
+    from datasets import load_dataset, concatenate_datasets
 
-print("Start loading dataset", flush=True)
+    print("Start loading dataset", flush=True)
 
-# dataset = load_dataset("nvidia/Llama-Nemotron-Post-Training-Dataset-v1")  # This redirects to "nvidia/Llama-Nemotron-Post-Training-Dataset" and the version is v1.1
-dataset = load_dataset("nvidia/Llama-Nemotron-Post-Training-Dataset", revision="ed905e6239c9d191e4c965a403dde07a5383b5eb")  # This is v1
+    # dataset = load_dataset("nvidia/Llama-Nemotron-Post-Training-Dataset-v1")  # This redirects to "nvidia/Llama-Nemotron-Post-Training-Dataset" and the version is v1.1
+    dataset = load_dataset("nvidia/Llama-Nemotron-Post-Training-Dataset", revision="ed905e6239c9d191e4c965a403dde07a5383b5eb")  # This is v1
 
-print("Finished loading dataset", flush=True)
+    print("Finished loading dataset", flush=True)
 
 # %% [markdown]
 # We then take each category in the SFT data subset, and generalize the samples used in Nemotron training:
@@ -41,23 +61,25 @@ def generalize_sample(sample):
     return {"messages": message_list}
 
 generic_samples_datasets = []
-for split in dataset.keys():
-    print(f"Processing {split} samples", flush=True)
-    new_split = dataset[split].filter(lambda sample: sample["used_in_training"] == 'yes', num_proc=data_prep_num_proc)
-    print(f"Adding {len(new_split)} samples", flush=True)
-    new_samples = new_split.map(generalize_sample, remove_columns=list(new_split[0].keys()), num_proc=data_prep_num_proc)
-    generic_samples_datasets.append(new_samples)
-    print("Samples added\n", flush=True)
+if prep_data:
+    for split in dataset.keys():
+        print(f"Processing {split} samples", flush=True)
+        new_split = dataset[split].filter(lambda sample: sample["used_in_training"] == 'yes', num_proc=prep_data_num_proc)
+        print(f"Adding {len(new_split)} samples", flush=True)
+        new_samples = new_split.map(generalize_sample, remove_columns=list(new_split[0].keys()), num_proc=prep_data_num_proc)
+        generic_samples_datasets.append(new_samples)
+        print("Samples added\n", flush=True)
 
 # %% [markdown]
 # Once we’ve got all of our reduced, generalized samples, we can re-combine them into a single dataset and save as a jsonl:
 
 # %%
-print("Writing generic messages-format data", flush=True)
-generic_samples = concatenate_datasets(generic_samples_datasets)
-print(generic_samples, flush=True)
-generic_samples.to_json("nemotron.jsonl", lines=True, orient="records", num_proc=data_prep_num_proc)
-print("Write complete!", flush=True)
+if prep_data:
+    print("Writing generic messages-format data", flush=True)
+    generic_samples = concatenate_datasets(generic_samples_datasets)
+    print(generic_samples, flush=True)
+    generic_samples.to_json(data_path, lines=True, orient="records", num_proc=prep_data_num_proc)
+    print("Write complete!", flush=True)
 
 # %% [markdown]
 # This leaves us with 1.7 million samples of math, science, code, chat, and safety. This includes examples with and without detailed reasoning. With this file, we are ready to start SFT.
@@ -109,7 +131,7 @@ torch_args = TorchrunArgs(
 # %%
 train_args = TrainingArgs(
 	model_path="microsoft/Phi-4-mini-instruct",
-	data_path="nemotron.jsonl",
+	data_path=data_path,
 	ckpt_output_dir="experiments/training_output",
 	data_output_dir="data/processed-data",                    # processed data ids/labels/masks
 	max_seq_len=20000,
