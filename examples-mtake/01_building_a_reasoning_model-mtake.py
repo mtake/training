@@ -14,6 +14,7 @@
 import os
 
 os.environ['PYTORCH_CUDA_ALLOC_CONF'] = "expandable_segments:True"
+os.environ['TOKENIZERS_PARALLELISM'] = "false"
 
 # %% [markdown]
 # ## Constants
