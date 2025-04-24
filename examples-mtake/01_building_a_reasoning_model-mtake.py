@@ -66,8 +66,15 @@ print("Write complete!", flush=True)
 # ## Fine-Tuning
 
 # %%
-fine_tune_nproc_per_node = 8
+import torch
+
+# fine_tune_nproc_per_node = 8
+assert torch.cuda.is_available()
+fine_tune_nproc_per_node = torch.cuda.device_count()
+print(f"fine_tune_nproc_per_node: {fine_tune_nproc_per_node}", flush=True)
+
 fine_tune_nnodes = 1
+print(f"fine_tune_nnodes: {fine_tune_nnodes}", flush=True)
 
 # %% [markdown]
 # For fine-tuning, we use the Instructlab Training library, built for optimal and efficient fine-tuning on any messages-format data. Using the python interface, we are able to launch the model training.
