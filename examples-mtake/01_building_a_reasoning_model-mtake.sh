@@ -16,7 +16,10 @@ LOGFILE="${BASENAME}-${START_TIME_STR}-${HOSTNAME_S}.log"
 echo "XXX LOGFILE ${LOGFILE}" | tee -a ${LOGFILE}
 echo "XXX DATETIME ${START_TIME_STR}" | tee -a ${LOGFILE}
 
-cmd="env TOKENIZERS_PARALLELISM=false python ${BASENAME}.py"
+ENV=""
+ENV="TOKENIZERS_PARALLELISM=false ${ENV}"
+ENV="PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True ${ENV}"
+cmd="${ENV}python ${BASENAME}.py"
 echo "$cmd" | tee -a ${LOGFILE}
 eval "$cmd" 2>&1 | tee -a ${LOGFILE}
 
