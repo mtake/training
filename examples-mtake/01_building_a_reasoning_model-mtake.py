@@ -91,9 +91,9 @@ if prep_data:
 # %%
 import torch
 
-# fine_tune_nproc_per_node = 8
 assert torch.cuda.is_available()
-fine_tune_nproc_per_node = torch.cuda.device_count()
+# fine_tune_nproc_per_node = 8  # original
+fine_tune_nproc_per_node = torch.cuda.device_count()  # NOTE adjust to the available # of gpus
 print(f"fine_tune_nproc_per_node: {fine_tune_nproc_per_node}", flush=True)
 
 fine_tune_nnodes = 1
@@ -101,9 +101,12 @@ print(f"fine_tune_nnodes: {fine_tune_nnodes}", flush=True)
 
 # %%
 model_path = "microsoft/Phi-4-mini-instruct"
-data_output_dir = "data/processed-data"
 ckpt_output_dir = "experiments/training_output"
+data_output_dir = "data/processed-data"
+# num_epochs = 3  # original
+num_epochs = 1  # NOTE time saver
 
+# %%
 force_process_data = False
 
 process_data = not os.path.isfile(f"{data_output_dir}/data.jsonl") or force_process_data
@@ -120,7 +123,7 @@ process_data = not os.path.isfile(f"{data_output_dir}/data.jsonl") or force_proc
 # We start by importing the necessary pieces from the library:
 
 # %%
-from instructlab.training.config import TorchrunArgs,TrainingArgs,DistributedBackend,FSDPOptions
+from instructlab.training.config import TorchrunArgs, TrainingArgs, DistributedBackend, FSDPOptions
 from instructlab.training.main_ds import run_training
 
 # %% [markdown]
@@ -130,9 +133,9 @@ from instructlab.training.main_ds import run_training
 torch_args = TorchrunArgs(
 	nproc_per_node=fine_tune_nproc_per_node,
 	nnodes=fine_tune_nnodes,
- 	node_rank=0,
+	node_rank=0,
 	rdzv_id=123,
- 	rdzv_endpoint="0.0.0.0:8888",
+	rdzv_endpoint="0.0.0.0:8888",
 )
 
 # %% [markdown]
@@ -146,16 +149,16 @@ train_args = TrainingArgs(
 	data_output_dir=data_output_dir,                          # processed data ids/labels/masks
 	max_seq_len=20000,
 	max_batch_len=30000,                                      # max tokens per gpu
-	num_epochs=3, 
+	num_epochs=num_epochs,
 	effective_batch_size=256,                                 # target batch size per model update
+	save_samples=0,                                           # save ckpt after num of samples seen (0=off)
 	learning_rate=2e-5,
 	warmup_steps=25,
-    save_samples=0,                                           # save ckpt after num of samples seen (0=off)
-    checkpoint_at_epoch=True,                                 # save ckpt after every epoch
-    accelerate_full_state_at_epoch=False,                     # save full-state for resuming
-    process_data=process_data,                                # can set to false if data processed before
-	distributed_backend=DistributedBackend.FSDP,
+	checkpoint_at_epoch=True,                                 # save ckpt after every epoch
+	accelerate_full_state_at_epoch=False,                     # save full-state for resuming
 	fsdp_options=FSDPOptions(cpu_offload_params=False),
+	distributed_backend=DistributedBackend.FSDP,
+	process_data=process_data,                                # can set to false if data processed before
 )
 
 # %% [markdown]
