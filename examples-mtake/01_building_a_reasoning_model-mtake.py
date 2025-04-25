@@ -20,7 +20,10 @@ os.environ['TOKENIZERS_PARALLELISM'] = "false"
 # ## Constants
 
 # %%
-data_path = "nemotron.jsonl"
+data_name = "nemotron"
+# data_name = "generic_data_seed_data_teigaku-genzei"
+
+generic_data_path = f"{data_name}.jsonl"
 
 # %% [markdown]
 # ## Data Preparation
@@ -31,7 +34,7 @@ prep_data_num_proc = 8
 # %%
 force_prep_data = False
 
-prep_data = not os.path.isfile(data_path) or force_prep_data
+prep_data = not os.path.isfile(generic_data_path) or force_prep_data
 
 # %% [markdown]
 # To accomplish this, we use the open source Nemotron Post-Training Dataset, but it cannot be used as-is. The dataset is specific to Llama, and includes 15 million samples (most of which were unused in Nemotron training), so we will convert and filter the dataset to a more digestible messages-format set of samples, usable by any model. We start by loading the dataset via Huggingface Datasets:
@@ -79,7 +82,7 @@ if prep_data:
     print("Writing generic messages-format data", flush=True)
     generic_samples = concatenate_datasets(generic_samples_datasets)
     print(generic_samples, flush=True)
-    generic_samples.to_json(data_path, lines=True, orient="records", num_proc=prep_data_num_proc)
+    generic_samples.to_json(generic_data_path, lines=True, orient="records", num_proc=prep_data_num_proc)
     print("Write complete!", flush=True)
 
 # %% [markdown]
@@ -101,15 +104,16 @@ print(f"fine_tune_nnodes: {fine_tune_nnodes}", flush=True)
 
 # %%
 model_path = "microsoft/Phi-4-mini-instruct"
-ckpt_output_dir = "experiments/training_output"
-data_output_dir = "data/processed-data"
+ckpt_output_dir = f"experiments/training_output-{data_name}"
+processed_data_dir = f"data/processed-data-{data_name}"
+
 # num_epochs = 3  # original
 num_epochs = 1  # NOTE time saver
 
 # %%
 force_process_data = False
 
-process_data = not os.path.isfile(f"{data_output_dir}/data.jsonl") or force_process_data
+process_data = not os.path.isfile(f"{processed_data_dir}/data.jsonl") or force_process_data
 
 # %% [markdown]
 # For fine-tuning, we use the Instructlab Training library, built for optimal and efficient fine-tuning on any messages-format data. Using the python interface, we are able to launch the model training.
@@ -144,9 +148,9 @@ torch_args = TorchrunArgs(
 # %%
 train_args = TrainingArgs(
 	model_path=model_path,
-	data_path=data_path,
+	data_path=generic_data_path,
 	ckpt_output_dir=ckpt_output_dir,
-	data_output_dir=data_output_dir,                          # processed data ids/labels/masks
+	data_output_dir=processed_data_dir,                       # processed data ids/labels/masks
 	max_seq_len=20000,
 	max_batch_len=30000,                                      # max tokens per gpu
 	num_epochs=num_epochs,
