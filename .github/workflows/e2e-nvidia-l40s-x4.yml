@@ -89,7 +89,7 @@ jobs:
     steps:
       - name: "Harden Runner"
         # v2.10.1
-        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0
         with:
           egress-policy: audit
       - name: Install Packages
@@ -185,7 +185,7 @@ jobs:
           nvidia-smi
           python3.11 -m pip cache remove llama_cpp_python
 
-          CMAKE_ARGS="-DLLAMA_CUDA=on" python3.11 -m pip install .
+          CMAKE_ARGS="-DLLAMA_CUDA=on" python3.11 -m pip install . -c constraints-dev.txt
 
           # https://github.com/instructlab/instructlab/issues/1821
           # install with Torch and build dependencies installed
@@ -200,6 +200,7 @@ jobs:
           pip install .[cuda]
 
       - name: Check disk before tests
+        if: always()
         run: |
           df -h
 
@@ -225,6 +226,7 @@ jobs:
           done
 
       - name: Check disk after tests
+        if: always()
         run: |
           df -h
 
@@ -342,7 +344,7 @@ jobs:
     steps:
       - name: "Harden Runner"
         # v2.10.1
-        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf
+        uses: step-security/harden-runner@0634a2670c59f64b4a01f0f96f84700a4088b9f0
         with:
           egress-policy: audit
 
