@@ -1,3 +1,4 @@
-nemotron.jsonl*
+/nemotron.jsonl*
+/generic_data*.jsonl*
 data*/
 experiments*/
