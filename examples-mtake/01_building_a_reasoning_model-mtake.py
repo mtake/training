@@ -103,7 +103,9 @@ fine_tune_nnodes = 1
 print(f"fine_tune_nnodes: {fine_tune_nnodes}", flush=True)
 
 # %%
-model_path = "microsoft/Phi-4-mini-instruct"
+# model_path = "microsoft/Phi-4-mini-instruct"
+model_path = "~/.cache/instructlab/models/granite-3.1-8b-lab-v1"
+# model_path = "~/.cache/instructlab/models/granite-3.1-8b-starter-v1"
 ckpt_output_dir = f"experiments/training_output-{data_name}"
 processed_data_dir = f"data/processed-data-{data_name}"
 
