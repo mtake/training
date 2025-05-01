@@ -20,8 +20,8 @@ os.environ['TOKENIZERS_PARALLELISM'] = "false"
 # ## Constants
 
 # %%
-data_name = "nemotron"
-# data_name = "generic_data_seed_data_teigaku-genzei"
+# data_name = "nemotron"
+data_name = "generic_data_teigaku-genzei"
 
 generic_data_path = f"{data_name}.jsonl"
 
