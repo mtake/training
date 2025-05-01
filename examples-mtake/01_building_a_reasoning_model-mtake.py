@@ -107,8 +107,8 @@ from pathlib import Path
 home = Path.home()
 
 # model_path = "microsoft/Phi-4-mini-instruct"
-model_path = f"{home}/instructlab/models/granite-3.1-8b-lab-v1"
-# model_path = f"{home}/instructlab/models/granite-3.1-8b-starter-v1"
+model_path = f"{home}/.cache/instructlab/models/granite-3.1-8b-lab-v1"
+# model_path = f"{home}/.cache/instructlab/models/granite-3.1-8b-starter-v1"
 ckpt_output_dir = f"experiments/training_output-{data_name}"
 processed_data_dir = f"data/processed-data-{data_name}"
 
