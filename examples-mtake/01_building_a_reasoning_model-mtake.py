@@ -115,8 +115,8 @@ model_name = os.path.basename(model_path)
 ckpt_output_dir = f"experiments/training_output-{model_name}-{data_name}"
 processed_data_dir = f"data/processed-data-{model_name}-{data_name}"
 
-# num_epochs = 3  # original
-num_epochs = 1  # NOTE time saver
+num_epochs = 3  # original
+# num_epochs = 1  # NOTE time saver
 
 # %%
 force_process_data = False
