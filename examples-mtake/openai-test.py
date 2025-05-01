@@ -19,9 +19,9 @@ base_url="https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.co
 #
 # NOTE: assumption
 # pip install vllm 'flashinfer-python<0.2.3'
-# python -m vllm.entrypoints.openai.api_server --model experiments/training_output-generic_data_teigaku-genzei/hf_format/samples_14021 --dtype auto # --api-key dummy
+# python -m vllm.entrypoints.openai.api_server --model experiments/training_output-Phi-4-mini-instruct-generic_data_teigaku-genzei/hf_format/samples_14021 --dtype auto # --api-key dummy
 #
-#model="experiments/training_output-generic_data_teigaku-genzei/hf_format/samples_14021"
+#model="experiments/training_output-Phi-4-mini-instruct-generic_data_teigaku-genzei/hf_format/samples_14021"
 #base_url="http://0.0.0.0:8000/v1"
 
 #prompt="Hello!"
