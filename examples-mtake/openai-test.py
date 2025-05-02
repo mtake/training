@@ -20,34 +20,28 @@ import os
 #base_url="https://inference-3scale-apicast-production.apps.rits.fmaas.res.ibm.com/microsoft-phi-4/v1"
 
 #
-# NOTE: assumption
 # pip install vllm 'flashinfer-python<0.2.3'
-# python -m vllm.entrypoints.openai.api_server --model experiments/training_output-Phi-4-mini-instruct-generic_data_teigaku-genzei/hf_format/samples_14021 --dtype auto # --api-key dummy
 #
+# vllm serve <model_name>
+# (Equivalent to: python -m vllm.entrypoints.openai.api_server --model <model_name>)
+# Options:
+#   --dtype auto (auto is default)
+#   --api-key dummy (if not specified, api-key is not checked)
+#
+
+# vllm serve experiments/training_output-Phi-4-mini-instruct-generic_data_teigaku-genzei/hf_format/samples_14021
 #model="experiments/training_output-Phi-4-mini-instruct-generic_data_teigaku-genzei/hf_format/samples_14021"
 #base_url="http://0.0.0.0:8000/v1"
 
-#
-# NOTE: assumption
-# pip install vllm 'flashinfer-python<0.2.3'
-# python -m vllm.entrypoints.openai.api_server --model /u/mtake/.cache/instructlab/models/granite-3.1-8b-lab-v1 --dtype auto # --api-key dummy
-#
+# vllm serve /u/mtake/.cache/instructlab/models/granite-3.1-8b-lab-v1
 #model="/u/mtake/.cache/instructlab/models/granite-3.1-8b-lab-v1"
 #base_url="http://0.0.0.0:8000/v1"
 
-#
-# NOTE: assumption
-# pip install vllm 'flashinfer-python<0.2.3'
-# python -m vllm.entrypoints.openai.api_server --model experiments/training_output-granite-3.1-8b-lab-v1-generic_data_teigaku-genzei/hf_format/samples_42061 --dtype auto # --api-key dummy
-#
+# vllm serve experiments/training_output-granite-3.1-8b-lab-v1-generic_data_teigaku-genzei/hf_format/samples_42061
 #model="experiments/training_output-granite-3.1-8b-lab-v1-generic_data_teigaku-genzei/hf_format/samples_42061"
 #base_url="http://0.0.0.0:8000/v1"
 
-#
-# NOTE: assumption
-# pip install vllm 'flashinfer-python<0.2.3'
-# python -m vllm.entrypoints.openai.api_server --model experiments/training_output-granite-3.3-8b-instruct-generic_data_teigaku-genzei/hf_format/samples_41966 --dtype auto # --api-key dummy
-#
+# vllm serve experiments/training_output-granite-3.3-8b-instruct-generic_data_teigaku-genzei/hf_format/samples_41966
 model="experiments/training_output-granite-3.3-8b-instruct-generic_data_teigaku-genzei/hf_format/samples_41966"
 base_url="http://0.0.0.0:8000/v1"
 
