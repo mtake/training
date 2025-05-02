@@ -106,9 +106,11 @@ print(f"fine_tune_nnodes: {fine_tune_nnodes}", flush=True)
 from pathlib import Path
 home = Path.home()
 
-# model_path = "microsoft/Phi-4-mini-instruct"
-model_path = f"{home}/.cache/instructlab/models/granite-3.1-8b-lab-v1"
+# model_path = "microsoft/Phi-4-mini-instruct"  # OK
 # model_path = f"{home}/.cache/instructlab/models/granite-3.1-8b-starter-v1"
+# model_path = f"{home}/.cache/instructlab/models/granite-3.1-8b-lab-v1"  # OK
+# model_path = "ibm-granite/granite-3.3-8b-base"
+model_path = "ibm-granite/granite-3.3-8b-instruct"  # OK
 
 model_name = os.path.basename(model_path)
 
@@ -129,7 +131,8 @@ process_data = not os.path.isfile(f"{processed_data_dir}/data.jsonl") or force_p
 # In this case, we ensure that we install off of main, to get the latest generic Causal LM support:
 
 # %%
-#! pip install git+https://github.com/instructlab/training.git@main
+# %%capture
+# %pip install git+https://github.com/instructlab/training.git@main
 
 # %% [markdown]
 # We start by importing the necessary pieces from the library:

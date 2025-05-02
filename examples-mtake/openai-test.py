@@ -38,10 +38,8 @@ import os
 #
 # NOTE: assumption
 # pip install vllm 'flashinfer-python<0.2.3'
-# python -m vllm.entrypoints.openai.api_server --model experiments/training_output-granite-3.1-8b-lab-v1-generic_data_teigaku-genzei/hf_format/samples_14027 --dtype auto # --api-key dummy
 # python -m vllm.entrypoints.openai.api_server --model experiments/training_output-granite-3.1-8b-lab-v1-generic_data_teigaku-genzei/hf_format/samples_42061 --dtype auto # --api-key dummy
 #
-#model="experiments/training_output-granite-3.1-8b-lab-v1-generic_data_teigaku-genzei/hf_format/samples_14027"
 #model="experiments/training_output-granite-3.1-8b-lab-v1-generic_data_teigaku-genzei/hf_format/samples_42061"
 #base_url="http://0.0.0.0:8000/v1"
 
