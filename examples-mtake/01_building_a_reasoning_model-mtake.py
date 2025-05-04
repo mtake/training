@@ -21,9 +21,9 @@ os.environ['TOKENIZERS_PARALLELISM'] = "false"
 
 # %%
 # data_name = "nemotron"
-data_name = "generic_data_teigaku-genzei"
+data_name = "messages_data_teigaku-genzei"
 
-generic_data_path = f"{data_name}.jsonl"
+messages_data_path = f"{data_name}.jsonl"
 
 # %% [markdown]
 # ## Data Preparation
@@ -34,7 +34,7 @@ prep_data_num_proc = 8
 # %%
 force_prep_data = False
 
-prep_data = not os.path.isfile(generic_data_path) or force_prep_data
+prep_data = not os.path.isfile(messages_data_path) or force_prep_data
 
 # %% [markdown]
 # To accomplish this, we use the open source Nemotron Post-Training Dataset, but it cannot be used as-is. The dataset is specific to Llama, and includes 15 million samples (most of which were unused in Nemotron training), so we will convert and filter the dataset to a more digestible messages-format set of samples, usable by any model. We start by loading the dataset via Huggingface Datasets:
@@ -82,7 +82,7 @@ if prep_data:
     print("Writing generic messages-format data", flush=True)
     generic_samples = concatenate_datasets(generic_samples_datasets)
     print(generic_samples, flush=True)
-    generic_samples.to_json(generic_data_path, lines=True, orient="records", num_proc=prep_data_num_proc)
+    generic_samples.to_json(messages_data_path, lines=True, orient="records", num_proc=prep_data_num_proc)
     print("Write complete!", flush=True)
 
 # %% [markdown]
@@ -159,7 +159,7 @@ torch_args = TorchrunArgs(
 # %%
 train_args = TrainingArgs(
 	model_path=model_path,
-	data_path=generic_data_path,
+	data_path=messages_data_path,
 	ckpt_output_dir=ckpt_output_dir,
 	data_output_dir=processed_data_dir,                       # processed data ids/labels/masks
 	max_seq_len=20000,
