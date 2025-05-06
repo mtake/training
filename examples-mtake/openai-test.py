@@ -29,6 +29,10 @@ import os
 #   --api-key dummy (if not specified, api-key is not checked)
 #
 
+# vllm serve microsoft/Phi-4-mini-instruct
+#model="microsoft/Phi-4-mini-instruct"
+#base_url="http://0.0.0.0:8000/v1"
+
 # vllm serve experiments/training_output-Phi-4-mini-instruct-messages_data_teigaku-genzei/hf_format/samples_14021
 #model="experiments/training_output-Phi-4-mini-instruct-messages_data_teigaku-genzei/hf_format/samples_14021"
 #base_url="http://0.0.0.0:8000/v1"
