@@ -45,6 +45,14 @@ import os
 #model="experiments/training_output-granite-3.1-8b-lab-v1-messages_data_teigaku-genzei/hf_format/samples_42061"
 #base_url="http://0.0.0.0:8000/v1"
 
+# vllm serve /u/mtake/.cache/instructlab/models/granite-3.1-8b-lab-v2_rev-2
+#model="/u/mtake/.cache/instructlab/models/granite-3.1-8b-lab-v2_rev-2"
+#base_url="http://0.0.0.0:8000/v1"
+
+# vllm serve experiments/training_output-granite-3.1-8b-lab-v2_rev-2-messages_data_teigaku-genzei/hf_format/samples_41913
+#model="experiments/training_output-granite-3.1-8b-lab-v2_rev-2-messages_data_teigaku-genzei/hf_format/samples_41913"
+#base_url="http://0.0.0.0:8000/v1"
+
 # vllm serve experiments/training_output-granite-3.3-8b-instruct-messages_data_teigaku-genzei/hf_format/samples_41966
 model="experiments/training_output-granite-3.3-8b-instruct-messages_data_teigaku-genzei/hf_format/samples_41966"
 base_url="http://0.0.0.0:8000/v1"
