@@ -54,12 +54,12 @@ import os
 #base_url="http://0.0.0.0:8000/v1"
 
 # vllm serve ibm-granite/granite-3.3-8b-instruct --served-model-name granite-3.3-8b-instruct
-#model="granite-3.3-8b-instruct"
-#base_url="http://0.0.0.0:8000/v1"
+model="granite-3.3-8b-instruct"
+base_url="http://0.0.0.0:8000/v1"
 
 # vllm serve experiments/training_output-granite-3.3-8b-instruct-messages_data_teigaku-genzei/hf_format/samples_41966 --served-model-name granite-3.3-8b-instruct-3epochs
-model="granite-3.3-8b-instruct-3epochs"
-base_url="http://0.0.0.0:8000/v1"
+#model="granite-3.3-8b-instruct-3epochs"
+#base_url="http://0.0.0.0:8000/v1"
 
 
 #prompt="Hello!"
