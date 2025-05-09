@@ -29,32 +29,36 @@ import os
 #   --api-key dummy (if not specified, api-key is not checked)
 #
 
-# vllm serve microsoft/Phi-4-mini-instruct
-#model="microsoft/Phi-4-mini-instruct"
+# vllm serve microsoft/Phi-4-mini-instruct --served-model-name Phi-4-mini-instruct
+#model="Phi-4-mini-instruct"
 #base_url="http://0.0.0.0:8000/v1"
 
-# vllm serve experiments/training_output-Phi-4-mini-instruct-messages_data_teigaku-genzei/hf_format/samples_14021
-#model="experiments/training_output-Phi-4-mini-instruct-messages_data_teigaku-genzei/hf_format/samples_14021"
+# vllm serve experiments/training_output-Phi-4-mini-instruct-messages_data_teigaku-genzei/hf_format/samples_14021 --served-model-name Phi-4-mini-instruct-1epoch
+#model="Phi-4-mini-instruct-1epoch"
 #base_url="http://0.0.0.0:8000/v1"
 
-# vllm serve /u/mtake/.cache/instructlab/models/granite-3.1-8b-lab-v1
-#model="/u/mtake/.cache/instructlab/models/granite-3.1-8b-lab-v1"
+# vllm serve /u/mtake/.cache/instructlab/models/granite-3.1-8b-lab-v1 --served-model-name granite-3.1-8b-lab-v1
+#model="granite-3.1-8b-lab-v1"
 #base_url="http://0.0.0.0:8000/v1"
 
-# vllm serve experiments/training_output-granite-3.1-8b-lab-v1-messages_data_teigaku-genzei/hf_format/samples_42061
-#model="experiments/training_output-granite-3.1-8b-lab-v1-messages_data_teigaku-genzei/hf_format/samples_42061"
+# vllm serve experiments/training_output-granite-3.1-8b-lab-v1-messages_data_teigaku-genzei/hf_format/samples_42061 --served-model-name granite-3.1-8b-lab-v1-3epochs
+#model="granite-3.1-8b-lab-v1-3epochs"
 #base_url="http://0.0.0.0:8000/v1"
 
-# vllm serve /u/mtake/.cache/instructlab/models/granite-3.1-8b-lab-v2_rev-2
-#model="/u/mtake/.cache/instructlab/models/granite-3.1-8b-lab-v2_rev-2"
+# vllm serve /u/mtake/.cache/instructlab/models/granite-3.1-8b-lab-v2_rev-2 --served-model-name granite-3.1-8b-lab-v2_rev-2
+#model="granite-3.1-8b-lab-v2_rev-2"
 #base_url="http://0.0.0.0:8000/v1"
 
-# vllm serve experiments/training_output-granite-3.1-8b-lab-v2_rev-2-messages_data_teigaku-genzei/hf_format/samples_41913
-#model="experiments/training_output-granite-3.1-8b-lab-v2_rev-2-messages_data_teigaku-genzei/hf_format/samples_41913"
+# vllm serve experiments/training_output-granite-3.1-8b-lab-v2_rev-2-messages_data_teigaku-genzei/hf_format/samples_41913 --served-model-name granite-3.1-8b-lab-v2_rev-2-3epochs
+#model="granite-3.1-8b-lab-v2_rev-2-3epochs"
 #base_url="http://0.0.0.0:8000/v1"
 
-# vllm serve experiments/training_output-granite-3.3-8b-instruct-messages_data_teigaku-genzei/hf_format/samples_41966
-model="experiments/training_output-granite-3.3-8b-instruct-messages_data_teigaku-genzei/hf_format/samples_41966"
+# vllm serve ibm-granite/granite-3.3-8b-instruct --served-model-name granite-3.3-8b-instruct
+#model="granite-3.3-8b-instruct"
+#base_url="http://0.0.0.0:8000/v1"
+
+# vllm serve experiments/training_output-granite-3.3-8b-instruct-messages_data_teigaku-genzei/hf_format/samples_41966 --served-model-name granite-3.3-8b-instruct-3epochs
+model="granite-3.3-8b-instruct-3epochs"
 base_url="http://0.0.0.0:8000/v1"
 
 
