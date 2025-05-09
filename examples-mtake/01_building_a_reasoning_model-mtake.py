@@ -109,6 +109,7 @@ home = Path.home()
 # model_path = "microsoft/Phi-4-mini-instruct"  # OK
 # model_path = f"{home}/.cache/instructlab/models/granite-3.1-8b-starter-v1"
 # model_path = f"{home}/.cache/instructlab/models/granite-3.1-8b-lab-v1"  # OK
+# model_path = f"{home}/.cache/instructlab/models/granite-3.1-8b-lab-v2_rev-2"  # OK
 # model_path = "ibm-granite/granite-3.3-8b-base"
 model_path = "ibm-granite/granite-3.3-8b-instruct"  # OK
 
