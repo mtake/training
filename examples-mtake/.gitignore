@@ -1,4 +1,5 @@
 /nemotron.jsonl*
 /messages_data*.jsonl*
-data*/
-experiments*/
+/data*
+/experiments*
+/checkpoints*
