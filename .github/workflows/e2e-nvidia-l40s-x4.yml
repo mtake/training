@@ -265,7 +265,7 @@ jobs:
       - name: Post job results to Slack if the workflow failed
         if: failure() && steps.check_pr.outputs.is_pr == 'false'
         id: slack-report-failure
-        uses: slackapi/slack-github-action@485a9d42d3a73031f12ec201c457e2162c45d02d # v2.0.0
+        uses: slackapi/slack-github-action@b0fa283ad8fea605de13dc3f449259339835fc52 # v2.1.0
         with:
           token: ${{ secrets.SON_OF_JEEVES_TOKEN }}
           method: chat.postMessage
@@ -279,7 +279,7 @@ jobs:
       - name: Post job results to Slack if the workflow succeeded
         if: success() && steps.check_pr.outputs.is_pr == 'false'
         id: slack-report-success
-        uses: slackapi/slack-github-action@485a9d42d3a73031f12ec201c457e2162c45d02d # v2.0.0
+        uses: slackapi/slack-github-action@b0fa283ad8fea605de13dc3f449259339835fc52 # v2.1.0
         with:
           token: ${{ secrets.SON_OF_JEEVES_TOKEN }}
           method: chat.postMessage
@@ -329,7 +329,7 @@ jobs:
           aws-region: ${{ needs.start-large-ec2-runner.outputs.ec2-instance-region }}
 
       - name: Stop EC2 runner
-        uses: machulav/ec2-github-runner@fcfb31a5760dad1314a64a0e172b78ec6fc8a17e # v2.3.6
+        uses: machulav/ec2-github-runner@a8c20fc0876503410b2b966c124abc2311984ce2 # v2.3.9
         with:
           mode: stop
           github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
