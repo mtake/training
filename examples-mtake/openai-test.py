@@ -41,26 +41,37 @@ import os
 #model="granite-3.1-8b-lab-v1"
 #base_url="http://0.0.0.0:8000/v1"
 
-# vllm serve experiments/training_output-granite-3.1-8b-lab-v1-messages_data_teigaku-genzei/hf_format/samples_42061 --served-model-name granite-3.1-8b-lab-v1-3epochs
+# vllm serve experiments/training_output-granite-3.1-8b-lab-v1-messages_data_teigaku-genzei-no_chat_tmpl/hf_format/samples_42061 --served-model-name granite-3.1-8b-lab-v1-3epochs
 #model="granite-3.1-8b-lab-v1-3epochs"
+#base_url="http://0.0.0.0:8000/v1"
+
+# vllm serve experiments/training_output-granite-3.1-8b-lab-v1-messages_data_teigaku-genzei/hf_format/samples_42052 --served-model-name granite-3.1-8b-lab-v1-chat-3epochs
+#model="granite-3.1-8b-lab-v1-chat-3epochs"
 #base_url="http://0.0.0.0:8000/v1"
 
 # vllm serve /u/mtake/.cache/instructlab/models/granite-3.1-8b-lab-v2_rev-2 --served-model-name granite-3.1-8b-lab-v2_rev-2
 #model="granite-3.1-8b-lab-v2_rev-2"
 #base_url="http://0.0.0.0:8000/v1"
 
-# vllm serve experiments/training_output-granite-3.1-8b-lab-v2_rev-2-messages_data_teigaku-genzei/hf_format/samples_41913 --served-model-name granite-3.1-8b-lab-v2_rev-2-3epochs
+# vllm serve experiments/training_output-granite-3.1-8b-lab-v2_rev-2-messages_data_teigaku-genzei-no_chat_tmpl/hf_format/samples_41913 --served-model-name granite-3.1-8b-lab-v2_rev-2-3epochs
 #model="granite-3.1-8b-lab-v2_rev-2-3epochs"
+#base_url="http://0.0.0.0:8000/v1"
+
+# vllm serve experiments/training_output-granite-3.1-8b-lab-v2_rev-2-messages_data_teigaku-genzei/hf_format/samples_42052 --served-model-name granite-3.1-8b-lab-v2_rev-2-chat-3epochs
+#model="granite-3.1-8b-lab-v2_rev-2-chat-3epochs"
 #base_url="http://0.0.0.0:8000/v1"
 
 # vllm serve ibm-granite/granite-3.3-8b-instruct --served-model-name granite-3.3-8b-instruct
 model="granite-3.3-8b-instruct"
 base_url="http://0.0.0.0:8000/v1"
 
-# vllm serve experiments/training_output-granite-3.3-8b-instruct-messages_data_teigaku-genzei/hf_format/samples_41966 --served-model-name granite-3.3-8b-instruct-3epochs
+# vllm serve experiments/training_output-granite-3.3-8b-instruct-messages_data_teigaku-genzei-no_chat_tmpl/hf_format/samples_41966 --served-model-name granite-3.3-8b-instruct-3epochs
 #model="granite-3.3-8b-instruct-3epochs"
 #base_url="http://0.0.0.0:8000/v1"
 
+# vllm serve experiments/training_output-granite-3.3-8b-instruct-messages_data_teigaku-genzei/hf_format/samples_42052 --served-model-name granite-3.3-8b-instruct-chat-3epochs
+#model="granite-3.3-8b-instruct-chat-3epochs"
+#base_url="http://0.0.0.0:8000/v1"
 
 #prompt="Hello!"
 #prompt="令和６年分所得税の定額減税の対象者は誰ですか？"
