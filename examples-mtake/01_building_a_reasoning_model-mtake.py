@@ -115,6 +115,12 @@ model_path = "ibm-granite/granite-3.3-8b-instruct"  # OK
 
 model_name = os.path.basename(model_path)
 
+chat_tmpl_dir = "../src/instructlab/training/chat_templates"
+if "granite" in model_name:
+    chat_tmpl_path = f"{chat_tmpl_dir}/ibm_generic_tmpl.py"
+else:
+    chat_tmpl_path = None
+
 ckpt_output_dir = f"experiments/training_output-{model_name}-{data_name}"
 processed_data_dir = f"data/processed-data-{model_name}-{data_name}"
 
@@ -160,6 +166,7 @@ torch_args = TorchrunArgs(
 # %%
 train_args = TrainingArgs(
 	model_path=model_path,
+	chat_tmpl_path=chat_tmpl_path,
 	data_path=messages_data_path,
 	ckpt_output_dir=ckpt_output_dir,
 	data_output_dir=processed_data_dir,                       # processed data ids/labels/masks
