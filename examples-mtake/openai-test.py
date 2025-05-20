@@ -25,8 +25,9 @@ import os
 # vllm serve <model_name>
 # (Equivalent to: python -m vllm.entrypoints.openai.api_server --model <model_name>)
 # Options:
-#   --dtype auto (auto is default)
+#   --dtype auto (auto is default. specify float16 on V100)
 #   --api-key dummy (if not specified, api-key is not checked)
+#   --max-model-len 16384 (to avoid the following error. ValueError: The model's max seq len (131072) is larger than the maximum number of tokens that can be stored in KV cache (83552). Try increasing `gpu_memory_utilization` or decreasing `max_model_len` when initializing the engine.)
 #
 
 # vllm serve microsoft/Phi-4-mini-instruct --served-model-name Phi-4-mini-instruct
@@ -62,8 +63,8 @@ import os
 #base_url="http://0.0.0.0:8000/v1"
 
 # vllm serve ibm-granite/granite-3.3-8b-instruct --served-model-name granite-3.3-8b-instruct
-model="granite-3.3-8b-instruct"
-base_url="http://0.0.0.0:8000/v1"
+#model="granite-3.3-8b-instruct"
+#base_url="http://0.0.0.0:8000/v1"
 
 # vllm serve experiments/training_output-granite-3.3-8b-instruct-messages_data_teigaku-genzei-no_chat_tmpl/hf_format/samples_41966 --served-model-name granite-3.3-8b-instruct-3epochs
 #model="granite-3.3-8b-instruct-3epochs"
@@ -72,6 +73,10 @@ base_url="http://0.0.0.0:8000/v1"
 # vllm serve experiments/training_output-granite-3.3-8b-instruct-messages_data_teigaku-genzei/hf_format/samples_42052 --served-model-name granite-3.3-8b-instruct-chat-3epochs
 #model="granite-3.3-8b-instruct-chat-3epochs"
 #base_url="http://0.0.0.0:8000/v1"
+
+# vllm serve checkpoints/granite-3.3-8b-instruct-teigaku-genzei-interp --served-model-name granite-3.3-8b-instruct-teigaku-genzei-interp
+model="granite-3.3-8b-instruct-teigaku-genzei-interp"
+base_url="http://0.0.0.0:8000/v1"
 
 #prompt="Hello!"
 #prompt="令和６年分所得税の定額減税の対象者は誰ですか？"
