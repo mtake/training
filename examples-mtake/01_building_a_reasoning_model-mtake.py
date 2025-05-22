@@ -197,4 +197,57 @@ print("Finished training", flush=True)
 # %% [markdown]
 # Upon completion, we have n (n=num_epochs) Huggingface-Format checkpoints in `experiments/training_output/hf_format`. The full run logs and metrics will also be recorded in `experiments/training_output`. Running the final training as a python script rather than in a notebook may help with progress bar writing to stdout.
 
+# %% [markdown]
+# ## Interpolation
+
+# %%
+import glob
+import os
+
+# find trained model
+ckpt_dirs = glob.glob(f"{ckpt_output_dir}/hf_format/samples_*")
+samples_len = len("samples_")
+# print(ckpt_dirs)
+max_num_samples = -1
+max_ckpt_dir = None
+for ckpt_dir in ckpt_dirs:
+    if not os.path.isdir(ckpt_dir):
+        continue
+    # print(ckpt_dir)
+    num_samples_str = os.path.basename(ckpt_dir)[samples_len:]
+    # print(num_samples_str)
+    try:
+        num_samples = int(num_samples_str)
+    except ValueError:
+        continue
+    if max_num_samples < num_samples:
+        max_num_samples = num_samples
+        max_ckpt_dir = ckpt_dir
+
+if max_ckpt_dir is not None:
+    print(f"Trained model checkpoint: {max_ckpt_dir}")
+    interp_ckpt_dir = f"{max_ckpt_dir}-interp"
+    orig_weight = 0.5
+
+    import torch
+    from transformers import AutoTokenizer, AutoModelForCausalLM
+
+    # load original model
+    model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.bfloat16)
+    tokenizer = AutoTokenizer.from_pretrained(model_path)
+    interp_model_state_dict = model.state_dict()
+    for key in interp_model_state_dict.keys():
+        interp_model_state_dict[key] = interp_model_state_dict[key] * orig_weight
+
+    # load trained model
+    model_tmp = AutoModelForCausalLM.from_pretrained(max_ckpt_dir, torch_dtype=torch.bfloat16)
+    interp_model_state_dict_tmp = model_tmp.state_dict()
+    for key in interp_model_state_dict.keys():
+        interp_model_state_dict[key] += interp_model_state_dict_tmp[key] * (1 - orig_weight)
+
+    # save interpolated model
+    model.save_pretrained(interp_ckpt_dir, state_dict=interp_model_state_dict)
+    tokenizer.save_pretrained(interp_ckpt_dir)
+    print(f"Interpolated model checkpoint: {interp_ckpt_dir}")
+
 
