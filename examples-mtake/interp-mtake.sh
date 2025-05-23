@@ -19,7 +19,7 @@ echo "XXX DATETIME ${START_TIME_STR}" | tee -a ${LOGFILE}
 ROOT="checkpoints"
 ORIGINAL="ibm-granite/granite-3.3-8b-instruct"
 TRAINED="${ROOT}/granite-3.3-8b-instruct-teigaku-genzei"
-INTERPOLATED="${ROOT}/${TRAINED}-interp"
+INTERPOLATED="${TRAINED}-interp"
 
 CKPTS_IN="${ORIGINAL}:0.5,${TRAINED}:0.5"
 CKPT_OUT="${INTERPOLATED}"
