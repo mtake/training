@@ -6,11 +6,11 @@ def interpolate_models(
     model_path: str,
     trained_model_path: str,
     trained_weight: float = 0.5,
-    interpolated_model_path: str | None = None,
+    output_model_path: str | None = None,
     torch_dtype: str | None = "bfloat16",
 ) -> str:
-    if interpolated_model_path is None:
-        interpolated_model_path = f"{trained_model_path}-interp"
+    if output_model_path is None:
+        output_model_path = f"{trained_model_path}-interp"
 
     model_kwargs: dict[str, any] = {}
     if torch_dtype is not None and torch_dtype != "auto":
@@ -37,10 +37,10 @@ def interpolate_models(
         state_dict[key] += trained_state_dict[key] * trained_weight
 
     # save interpolated model
-    model.save_pretrained(interpolated_model_path, state_dict=state_dict)
-    tokenizer.save_pretrained(interpolated_model_path)
+    model.save_pretrained(output_model_path, state_dict=state_dict)
+    tokenizer.save_pretrained(output_model_path)
 
-    return interpolated_model_path
+    return output_model_path
 
 
 def parse_arguments():
@@ -66,10 +66,10 @@ def parse_arguments():
         help="weight for the trained model",
     )
     parser.add_argument(
-        "--interpolated_model_path",
+        "--output_model_path",
         type=str,
         default=None,
-        help="path to the interpolated model",
+        help="path to the output model",
     )
     parser.add_argument(
         "--torch_dtype",
@@ -86,14 +86,14 @@ def main():
     model_path: str = args.model_path
     trained_model_path: str = args.trained_model_path
     trained_weight: float = args.trained_weight
-    interpolated_model_path: str | None = args.interpolated_model_path
+    output_model_path: str | None = args.output_model_path
     torch_dtype: str | None = args.torch_dtype
 
     interpolate_models(
         model_path,
         trained_model_path,
         trained_weight=trained_weight,
-        interpolated_model_path=interpolated_model_path,
+        output_model_path=output_model_path,
         torch_dtype=torch_dtype,
     )
 

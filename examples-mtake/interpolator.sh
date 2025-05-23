@@ -24,13 +24,13 @@ INTERPOLATED="${TRAINED}-interp"
 MODEL_PATH="${ORIGINAL}"
 TRAINED_MODEL_PATH="${TRAINED}"
 TRAINED_WEIGHT=0.5
-INTERPOLATED_MODEL_PATH="${INTERPOLATED}"
+OUTPUT_MODEL_PATH="${INTERPOLATED}"
 TORCH_DTYPE="bfloat16"
 
 ENV=""
 #ENV="TOKENIZERS_PARALLELISM=false ${ENV}"
 #ENV="PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True ${ENV}"
-cmd="${ENV}python ${BASENAME}.py --model_path ${MODEL_PATH} --trained_model_path ${TRAINED_MODEL_PATH} --trained_weight ${TRAINED_WEIGHT} --interpolated_model_path ${INTERPOLATED_MODEL_PATH} --torch_dtype ${TORCH_DTYPE}"
+cmd="${ENV}python ${BASENAME}.py --model_path ${MODEL_PATH} --trained_model_path ${TRAINED_MODEL_PATH} --trained_weight ${TRAINED_WEIGHT} --output_model_path ${OUTPUT_MODEL_PATH} --torch_dtype ${TORCH_DTYPE}"
 echo "$cmd" | tee -a ${LOGFILE}
 eval "$cmd" 2>&1 | tee -a ${LOGFILE}
 

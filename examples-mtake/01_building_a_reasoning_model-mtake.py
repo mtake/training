@@ -229,8 +229,8 @@ if trained_model_path is not None:
 
     print(f"Trained model path: {trained_model_path}")
 
-    interpolated_model_path = interpolate_models(model_path, trained_model_path)
+    output_model_path = interpolate_models(model_path, trained_model_path)
 
-    print(f"Interpolated model path: {interpolated_model_path}")
+    print(f"Output model path: {output_model_path}")
 
 
