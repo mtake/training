@@ -1,0 +1,102 @@
+import argparse
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+
+def interpolate_models(
+    model_path: str,
+    trained_model_path: str,
+    trained_weight: float = 0.5,
+    interpolated_model_path: str | None = None,
+    torch_dtype: str | None = "bfloat16",
+) -> str:
+    if interpolated_model_path is None:
+        interpolated_model_path = f"{trained_model_path}-interp"
+
+    model_kwargs: dict[str, any] = {}
+    if torch_dtype is not None and torch_dtype != "auto":
+        model_kwargs["torch_dtype"] = torch_dtype
+
+    # load original model
+    tokenizer = AutoTokenizer.from_pretrained(model_path)
+    model = AutoModelForCausalLM.from_pretrained(
+        model_path,
+        **model_kwargs,
+    )
+    state_dict = model.state_dict()
+    weight = 1 - trained_weight
+    for key in state_dict.keys():
+        state_dict[key] = state_dict[key] * weight
+
+    # load trained model
+    trained_model = AutoModelForCausalLM.from_pretrained(
+        trained_model_path,
+        **model_kwargs,
+    )
+    trained_state_dict = trained_model.state_dict()
+    for key in state_dict.keys():
+        state_dict[key] += trained_state_dict[key] * trained_weight
+
+    # save interpolated model
+    model.save_pretrained(interpolated_model_path, state_dict=state_dict)
+    tokenizer.save_pretrained(interpolated_model_path)
+
+    return interpolated_model_path
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter
+    )
+    parser.add_argument(
+        "--model_path",
+        type=str,
+        required=True,
+        help="path to the original model",
+    )
+    parser.add_argument(
+        "--trained_model_path",
+        type=str,
+        required=True,
+        help="path to the trained model",
+    )
+    parser.add_argument(
+        "--trained_weight",
+        type=float,
+        default=0.5,
+        help="weight for the trained model",
+    )
+    parser.add_argument(
+        "--interpolated_model_path",
+        type=str,
+        default=None,
+        help="path to the interpolated model",
+    )
+    parser.add_argument(
+        "--torch_dtype",
+        type=str,
+        default="bfloat16",
+        help="torch dtype",
+    )
+    args = parser.parse_args()
+    return args
+
+
+def main():
+    args = parse_arguments()
+    model_path: str = args.model_path
+    trained_model_path: str = args.trained_model_path
+    trained_weight: float = args.trained_weight
+    interpolated_model_path: str | None = args.interpolated_model_path
+    torch_dtype: str | None = args.torch_dtype
+
+    interpolate_models(
+        model_path,
+        trained_model_path,
+        trained_weight=trained_weight,
+        interpolated_model_path=interpolated_model_path,
+        torch_dtype=torch_dtype,
+    )
+
+
+if __name__ == "__main__":
+    main()
