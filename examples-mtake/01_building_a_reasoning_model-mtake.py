@@ -209,7 +209,7 @@ ckpt_dirs = glob.glob(f"{ckpt_output_dir}/hf_format/samples_*")
 samples_len = len("samples_")
 # print(ckpt_dirs)
 max_num_samples = -1
-max_ckpt_dir = None
+trained_model_path = None
 for ckpt_dir in ckpt_dirs:
     if not os.path.isdir(ckpt_dir):
         continue
@@ -222,32 +222,15 @@ for ckpt_dir in ckpt_dirs:
         continue
     if max_num_samples < num_samples:
         max_num_samples = num_samples
-        max_ckpt_dir = ckpt_dir
+        trained_model_path = ckpt_dir
 
-if max_ckpt_dir is not None:
-    print(f"Trained model checkpoint: {max_ckpt_dir}")
-    interp_ckpt_dir = f"{max_ckpt_dir}-interp"
-    orig_weight = 0.5
+if trained_model_path is not None:
+    from interpolator import interpolate_models
 
-    import torch
-    from transformers import AutoTokenizer, AutoModelForCausalLM
+    print(f"Trained model path: {trained_model_path}")
 
-    # load original model
-    model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.bfloat16)
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
-    interp_model_state_dict = model.state_dict()
-    for key in interp_model_state_dict.keys():
-        interp_model_state_dict[key] = interp_model_state_dict[key] * orig_weight
+    interpolated_model_path = interpolate_models(model_path, trained_model_path)
 
-    # load trained model
-    model_tmp = AutoModelForCausalLM.from_pretrained(max_ckpt_dir, torch_dtype=torch.bfloat16)
-    interp_model_state_dict_tmp = model_tmp.state_dict()
-    for key in interp_model_state_dict.keys():
-        interp_model_state_dict[key] += interp_model_state_dict_tmp[key] * (1 - orig_weight)
-
-    # save interpolated model
-    model.save_pretrained(interp_ckpt_dir, state_dict=interp_model_state_dict)
-    tokenizer.save_pretrained(interp_ckpt_dir)
-    print(f"Interpolated model checkpoint: {interp_ckpt_dir}")
+    print(f"Interpolated model path: {interpolated_model_path}")
 
 
