@@ -11,6 +11,7 @@ on:
       - '**.py'
       - 'pyproject.toml'
       - 'requirements*.txt'
+      - 'constraints-dev.txt'
       - 'tox.ini'
       - '.pylintrc'
       - 'scripts/*.sh' # Used by this workflow
@@ -23,6 +24,7 @@ on:
       - '**.py'
       - 'pyproject.toml'
       - 'requirements*.txt'
+      - 'constraints-dev.txt'
       - 'tox.ini'
       - '.pylintrc'
       - 'scripts/*.sh' # Used by this workflow
@@ -80,7 +82,7 @@ jobs:
       - name: Install tox
         run: |
           python -m pip install --upgrade pip
-          python -m pip install tox tox-gh
+          python -m pip install tox tox-gh -c constraints-dev.txt
 
       - name: "${{ matrix.lint.name }}"
         run: |

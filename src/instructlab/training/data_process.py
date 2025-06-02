@@ -27,7 +27,7 @@ MASK_TOKEN = "<|MASK|>"
 UNMASK_BEGIN_TOKEN = "<|UNMASK_BEGIN|>"
 UNMASK_END_TOKEN = "<|UNMASK_END|>"
 
-logger = logging.getLogger("instructlab.training")
+logger = logging.getLogger(__name__)
 
 
 def check_valid_sample(
@@ -197,9 +197,9 @@ def unmask_message_content(
     for i in range(len(final_sentence_tk)):
         for seq in special_sequences:
             if final_sentence_tk[i : i + len(seq)] == seq:
-                assert all(
-                    final_labels[i + j] == -100 for j in range(len(seq))
-                ), f"Special sequence {seq} is unmasked"
+                assert all(final_labels[i + j] == -100 for j in range(len(seq))), (
+                    f"Special sequence {seq} is unmasked"
+                )
 
     # 2. No pretrain tokens should be in the final sentence_tk
     assert all(
@@ -233,11 +233,9 @@ def print_masked_samples(data, tokenizer, unmask, num_proc):
         filtered_data = filtered_data.shuffle()
         for i, sample in enumerate(filtered_data):
             text, orig_text = get_masked_and_orig_text(sample)
-            logger.debug("Original Input: %s", orig_text)
-            logger.debug(
-                "Pretraining" if unmask else "Instruction" + " ex sample %d: %s",
-                i + 1,
-                text,
+            print(f"\033[35mOriginal Input: {orig_text}\n\033[0m")
+            print(
+                f"\033[33m{'Pretraining' if unmask else 'Instruction'} ex sample {i + 1}: {text}\033[0m"
             )
             if i > 1:
                 break
