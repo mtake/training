@@ -56,7 +56,7 @@ if prep_data:
 # %%
 def generalize_sample(sample):
     user = sample["input"].split("user<|end_header_id|>\n\n")[1].split("<|eot_id|>")[0]
-    assistant = sample["output"].replace("<|eot_id|>", '')
+    assistant = sample["output"].replace("<|eot_id|>", "")
     message_list = [
         {"role": "system", "content": f"detailed thinking {sample['reasoning']}"},
         {"role": "user", "content": user},
@@ -64,13 +64,18 @@ def generalize_sample(sample):
     ]
     return {"messages": message_list}
 
+
 generic_samples_datasets = []
 if prep_data:
     for split in dataset.keys():
         print(f"Processing {split} samples", flush=True)
-        new_split = dataset[split].filter(lambda sample: sample["used_in_training"] == 'yes', num_proc=prep_data_num_proc)
+        new_split = dataset[split].filter(
+            lambda sample: sample["used_in_training"] == "yes", num_proc=prep_data_num_proc
+        )
         print(f"Adding {len(new_split)} samples", flush=True)
-        new_samples = new_split.map(generalize_sample, remove_columns=list(new_split[0].keys()), num_proc=prep_data_num_proc)
+        new_samples = new_split.map(
+            generalize_sample, remove_columns=list(new_split[0].keys()), num_proc=prep_data_num_proc
+        )
         generic_samples_datasets.append(new_samples)
         print("Samples added\n", flush=True)
 
@@ -106,12 +111,10 @@ print(f"fine_tune_nnodes: {fine_tune_nnodes}", flush=True)
 from pathlib import Path
 home = Path.home()
 
-# model_path = "microsoft/Phi-4-mini-instruct"  # OK
-# model_path = f"{home}/.cache/instructlab/models/granite-3.1-8b-starter-v1"
-# model_path = f"{home}/.cache/instructlab/models/granite-3.1-8b-lab-v1"  # OK
-# model_path = f"{home}/.cache/instructlab/models/granite-3.1-8b-lab-v2_rev-2"  # OK
-# model_path = "ibm-granite/granite-3.3-8b-base"
-model_path = "ibm-granite/granite-3.3-8b-instruct"  # OK
+# model_path = "microsoft/Phi-4-mini-instruct"
+# model_path = f"{home}/.cache/instructlab/models/granite-3.1-8b-lab-v1"
+# model_path = f"{home}/.cache/instructlab/models/granite-3.1-8b-lab-v2_rev-2"
+model_path = "ibm-granite/granite-3.3-8b-instruct"
 
 model_name = os.path.basename(model_path)
 
@@ -145,7 +148,12 @@ process_data = not os.path.isfile(f"{processed_data_dir}/data.jsonl") or force_p
 # We start by importing the necessary pieces from the library:
 
 # %%
-from instructlab.training.config import TorchrunArgs, TrainingArgs, DistributedBackend, FSDPOptions
+from instructlab.training.config import (
+    TorchrunArgs,
+    TrainingArgs,
+    DistributedBackend,
+    FSDPOptions,
+)
 from instructlab.training.main_ds import run_training
 
 # %% [markdown]
@@ -153,11 +161,11 @@ from instructlab.training.main_ds import run_training
 
 # %%
 torch_args = TorchrunArgs(
-	nproc_per_node=fine_tune_nproc_per_node,
-	nnodes=fine_tune_nnodes,
-	node_rank=0,
-	rdzv_id=123,
-	rdzv_endpoint="0.0.0.0:8888",
+    nproc_per_node=fine_tune_nproc_per_node,
+    nnodes=fine_tune_nnodes,
+    node_rank=0,
+    rdzv_id=123,
+    rdzv_endpoint="0.0.0.0:8888",
 )
 
 # %% [markdown]
@@ -165,23 +173,23 @@ torch_args = TorchrunArgs(
 
 # %%
 train_args = TrainingArgs(
-	model_path=model_path,
-	chat_tmpl_path=chat_tmpl_path,
-	data_path=messages_data_path,
-	ckpt_output_dir=ckpt_output_dir,
-	data_output_dir=processed_data_dir,                       # processed data ids/labels/masks
-	max_seq_len=20000,
-	max_batch_len=30000,                                      # max tokens per gpu
-	num_epochs=num_epochs,
-	effective_batch_size=256,                                 # target batch size per model update
-	save_samples=0,                                           # save ckpt after num of samples seen (0=off)
-	learning_rate=2e-5,
-	warmup_steps=25,
-	checkpoint_at_epoch=True,                                 # save ckpt after every epoch
-	accelerate_full_state_at_epoch=False,                     # save full-state for resuming
-	fsdp_options=FSDPOptions(cpu_offload_params=False),
-	distributed_backend=DistributedBackend.FSDP,
-	process_data=process_data,                                # can set to false if data processed before
+    model_path=model_path,
+    chat_tmpl_path=chat_tmpl_path,
+    data_path=messages_data_path,
+    ckpt_output_dir=ckpt_output_dir,
+    data_output_dir=processed_data_dir,  # processed data ids/labels/masks
+    max_seq_len=20000,
+    max_batch_len=30000,  # max tokens per gpu
+    num_epochs=num_epochs,
+    effective_batch_size=256,  # target batch size per model update
+    learning_rate=2e-5,
+    warmup_steps=25,
+    save_samples=0,  # save ckpt after num of samples seen (0=off)
+    checkpoint_at_epoch=True,  # save ckpt after every epoch
+    accelerate_full_state_at_epoch=False,  # save full-state for resuming
+    process_data=process_data,  # can set to false if data processed before
+    distributed_backend=DistributedBackend.FSDP,
+    fsdp_options=FSDPOptions(cpu_offload_params=False),
 )
 
 # %% [markdown]
