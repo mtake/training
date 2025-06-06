@@ -21,7 +21,8 @@ os.environ['TOKENIZERS_PARALLELISM'] = "false"
 
 # %%
 # data_name = "nemotron"
-data_name = "messages_data_teigaku-genzei"
+# data_name = "messages_data_teigaku-genzei"
+data_name = "messages_data_teigaku-genzei-ibm"
 
 messages_data_path = f"{data_name}.jsonl"
 
