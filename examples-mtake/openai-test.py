@@ -75,7 +75,11 @@ import os
 #base_url="http://0.0.0.0:8000/v1"
 
 # vllm serve checkpoints/granite-3.3-8b-instruct-teigaku-genzei-interp --served-model-name granite-3.3-8b-instruct-teigaku-genzei-interp
-model="granite-3.3-8b-instruct-teigaku-genzei-interp"
+#model="granite-3.3-8b-instruct-teigaku-genzei-interp"
+#base_url="http://0.0.0.0:8000/v1"
+
+# vllm serve checkpoints/granite-3.3-8b-instruct-teigaku-genzei-ibm-interp --served-model-name granite-3.3-8b-instruct-teigaku-genzei-ibm-interp
+model="granite-3.3-8b-instruct-teigaku-genzei-ibm-interp"
 base_url="http://0.0.0.0:8000/v1"
 
 #prompt="Hello!"
