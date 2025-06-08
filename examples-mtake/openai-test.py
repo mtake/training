@@ -78,13 +78,18 @@ import os
 #model="granite-3.3-8b-instruct-teigaku-genzei-interp"
 #base_url="http://0.0.0.0:8000/v1"
 
-# vllm serve checkpoints/granite-3.3-8b-instruct-teigaku-genzei-ibm-interp --served-model-name granite-3.3-8b-instruct-teigaku-genzei-ibm-interp
-model="granite-3.3-8b-instruct-teigaku-genzei-ibm-interp"
+# vllm serve checkpoints/granite-3.3-8b-instruct-teigaku-genzei-ibm --served-model-name granite-3.3-8b-instruct-teigaku-genzei-ibm
+model="granite-3.3-8b-instruct-teigaku-genzei-ibm"
 base_url="http://0.0.0.0:8000/v1"
+
+# vllm serve checkpoints/granite-3.3-8b-instruct-teigaku-genzei-ibm-interp --served-model-name granite-3.3-8b-instruct-teigaku-genzei-ibm-interp
+#model="granite-3.3-8b-instruct-teigaku-genzei-ibm-interp"
+#base_url="http://0.0.0.0:8000/v1"
 
 #prompt="Hello!"
 #prompt="令和６年分所得税の定額減税の対象者は誰ですか？"
-prompt="令和６年分所得税の定額減税に関する情報の基礎となる法律や通達はいつのものですか？"
+#prompt="令和６年分所得税の定額減税に関する情報の基礎となる法律や通達はいつのものですか？"
+prompt="合計所得金額が1,805万円を超える人は定額減税の対象となりますか？"
 
 client = OpenAI(
     api_key="dummy",
