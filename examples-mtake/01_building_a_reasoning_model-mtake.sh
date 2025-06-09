@@ -19,6 +19,7 @@ echo "XXX DATETIME ${START_TIME_STR}" | tee -a ${LOGFILE}
 ENV=""
 ENV="TOKENIZERS_PARALLELISM=false ${ENV}"
 ENV="PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True ${ENV}"
+ENV="NCCL_DEBUG=INFO ${ENV}"
 cmd="${ENV}python ${BASENAME}.py"
 echo "$cmd" | tee -a ${LOGFILE}
 eval "$cmd" 2>&1 | tee -a ${LOGFILE}
