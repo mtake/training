@@ -78,27 +78,47 @@ import os
 #model="granite-3.3-8b-instruct-teigaku-genzei-interp"
 #base_url="http://0.0.0.0:8000/v1"
 
-# vllm serve checkpoints/granite-3.3-8b-instruct-teigaku-genzei-ibm --served-model-name granite-3.3-8b-instruct-teigaku-genzei-ibm
-model="granite-3.3-8b-instruct-teigaku-genzei-ibm"
-base_url="http://0.0.0.0:8000/v1"
-
-# vllm serve checkpoints/granite-3.3-8b-instruct-teigaku-genzei-ibm-interp --served-model-name granite-3.3-8b-instruct-teigaku-genzei-ibm-interp
-#model="granite-3.3-8b-instruct-teigaku-genzei-ibm-interp"
+# vllm serve checkpoints/granite-3.3-8b-instruct-teigaku-genzei-ibm-v0 --served-model-name granite-3.3-8b-instruct-teigaku-genzei-ibm-v0
+#model="granite-3.3-8b-instruct-teigaku-genzei-ibm-v0"
 #base_url="http://0.0.0.0:8000/v1"
+
+# vllm serve checkpoints/granite-3.3-8b-instruct-teigaku-genzei-ibm-v0-interp --served-model-name granite-3.3-8b-instruct-teigaku-genzei-ibm-v0-interp
+#model="granite-3.3-8b-instruct-teigaku-genzei-ibm-v0-interp"
+#base_url="http://0.0.0.0:8000/v1"
+
+# vllm serve checkpoints/granite-3.3-8b-instruct-teigaku-genzei-ibm-v2 --served-model-name granite-3.3-8b-instruct-teigaku-genzei-ibm-v2
+#model="granite-3.3-8b-instruct-teigaku-genzei-ibm-v2"
+#base_url="http://0.0.0.0:8000/v1"
+
+# vllm serve checkpoints/granite-3.3-8b-instruct-teigaku-genzei-ibm-v2-interp --served-model-name granite-3.3-8b-instruct-teigaku-genzei-ibm-v2-interp
+model="granite-3.3-8b-instruct-teigaku-genzei-ibm-v2-interp"
+base_url="http://0.0.0.0:8000/v1"
 
 #prompt="Hello!"
 #prompt="令和６年分所得税の定額減税の対象者は誰ですか？"
 #prompt="令和６年分所得税の定額減税に関する情報の基礎となる法律や通達はいつのものですか？"
-prompt="合計所得金額が1,805万円を超える人は定額減税の対象となりますか？"
+#prompt="合計所得金額が1,805万円を超える人は定額減税の対象となりますか？"
+#{"messages":[{"content":"合計所得金額が1,805万円を超える人は定額減税の対象となりますか？","role":"user"},{"content":"いいえ、合計所得金額が1,805万円を超える人は定額減税の対象とはなりません。\n\n","role":"assistant"}]}
+##prompt="令和6年分の所得税における定額減税額とは何ですか？"
+##{"messages":[{"content":"令和6年分の所得税における定額減税額とは何ですか？","role":"user"},{"content":"令和6年分の所得税における定額減税額は、所得税から控除できる金額で、所得者本人には3万円が控除され、同一生計配偶者や扶養親族1人につき3万円が加算されます。\n\n","role":"assistant"}]}
+prompt="令和6年分の所得税における「定額減税額」はどのように計算されますか？"
+#{"messages":[{"content":"令和6年分の所得税における「定額減税額」はどのように計算されますか？","role":"user"},{"content":"令和6年分の所得税における「定額減税額」は、所得者本人に対して3万円を基本とし、同一生計配偶者または扶養親族1人につき3万円を加算して計算されます。\n\n","role":"assistant"}]}
+
+messages = [{"role": "user", "content": prompt}]
 
 client = OpenAI(
     api_key="dummy",
     base_url=base_url,
     default_headers={'RITS_API_KEY': os.environ["RITS_API_KEY"]},
 )
-completion = client.completions.create(
+#completion = client.completions.create(
+#    model=model,
+#    prompt=prompt,
+#    max_tokens=1000,
+#)
+completion = client.chat.completions.create(
     model=model,
-    prompt=prompt,
+    messages=messages,
     max_tokens=1000,
 )
 print(completion.to_json())
