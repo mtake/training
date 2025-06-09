@@ -19,8 +19,8 @@ echo "XXX DATETIME ${START_TIME_STR}" | tee -a ${LOGFILE}
 ROOT="checkpoints"
 ORIGINAL="ibm-granite/granite-3.3-8b-instruct"
 #TRAINED="${ROOT}/granite-3.3-8b-instruct-teigaku-genzei"
-#TRAINED="${ROOT}/granite-3.3-8b-instruct-teigaku-genzei-ibm"
-TRAINED="${ROOT}/granite-3.3-8b-instruct-teigaku-genzei-ibm-35x"
+#TRAINED="${ROOT}/granite-3.3-8b-instruct-teigaku-genzei-ibm-v0"
+TRAINED="${ROOT}/granite-3.3-8b-instruct-teigaku-genzei-ibm-v2"
 INTERPOLATED="${TRAINED}-interp"
 
 MODEL_PATH="${ORIGINAL}"
