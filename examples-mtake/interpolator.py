@@ -17,15 +17,14 @@ def interpolate_models(
         model_kwargs["torch_dtype"] = torch_dtype
 
     # load original model
-    tokenizer = AutoTokenizer.from_pretrained(model_path)
     model = AutoModelForCausalLM.from_pretrained(
         model_path,
         **model_kwargs,
     )
     state_dict = model.state_dict()
-    weight = 1 - trained_weight
+    original_weight = 1 - trained_weight
     for key in state_dict.keys():
-        state_dict[key] = state_dict[key] * weight
+        state_dict[key] = state_dict[key] * original_weight
 
     # load trained model
     trained_model = AutoModelForCausalLM.from_pretrained(
@@ -38,6 +37,9 @@ def interpolate_models(
 
     # save interpolated model
     model.save_pretrained(output_model_path, state_dict=state_dict)
+
+    # copy tokenizer
+    tokenizer = AutoTokenizer.from_pretrained(model_path)
     tokenizer.save_pretrained(output_model_path)
 
     return output_model_path
