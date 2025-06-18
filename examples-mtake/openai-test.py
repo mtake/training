@@ -99,7 +99,15 @@ import os
 #base_url="http://0.0.0.0:8000/v1"
 
 # vllm serve checkpoints/granite-3.3-8b-instruct-teigaku-genzei-ibm-v3-interp --served-model-name granite-3.3-8b-instruct-teigaku-genzei-ibm-v3-interp
-model="granite-3.3-8b-instruct-teigaku-genzei-ibm-v3-interp"
+#model="granite-3.3-8b-instruct-teigaku-genzei-ibm-v3-interp"
+#base_url="http://0.0.0.0:8000/v1"
+
+# vllm serve checkpoints/granite-3.3-8b-instruct-teigaku-genzei-ibm-v4-d5 --served-model-name granite-3.3-8b-instruct-teigaku-genzei-ibm-v4-d5
+#model="granite-3.3-8b-instruct-teigaku-genzei-ibm-v4-d5"
+#base_url="http://0.0.0.0:8000/v1"
+
+# vllm serve checkpoints/granite-3.3-8b-instruct-teigaku-genzei-ibm-v4-d5-interp --served-model-name granite-3.3-8b-instruct-teigaku-genzei-ibm-v4-d5-interp
+model="granite-3.3-8b-instruct-teigaku-genzei-ibm-v4-d5-interp"
 base_url="http://0.0.0.0:8000/v1"
 
 #prompt="Hello!"
