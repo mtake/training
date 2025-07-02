@@ -30,6 +30,10 @@ import os
 #   --max-model-len 16384 (to avoid the following error. ValueError: The model's max seq len (131072) is larger than the maximum number of tokens that can be stored in KV cache (83552). Try increasing `gpu_memory_utilization` or decreasing `max_model_len` when initializing the engine.)
 #
 
+# vllm serve microsoft/phi-4 --served-model-name microsoft/phi-4
+#model="microsoft/phi-4"
+#base_url="http://0.0.0.0:8000/v1"
+
 # vllm serve microsoft/Phi-4-mini-instruct --served-model-name Phi-4-mini-instruct
 #model="Phi-4-mini-instruct"
 #base_url="http://0.0.0.0:8000/v1"
