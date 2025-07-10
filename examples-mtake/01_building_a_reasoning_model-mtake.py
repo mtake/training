@@ -26,9 +26,20 @@ os.environ['TOKENIZERS_PARALLELISM'] = "false"
 # data_name = "messages_data_teigaku-genzei-ibm-v2"
 # data_name = "messages_data_teigaku-genzei-ibm-v3"
 # data_name = "messages_data_teigaku-genzei-ibm-v4-d5"
-data_name = "messages_data_teigaku-genzei-ibm-v5_d5"
+# data_name = "messages_data_teigaku-genzei-ibm-v5_d5"
 # data_name = "messages_data_ibm-newsroom-d5"
 # data_name = "messages_data_ibm-newsroom-d5-x100"
+data_name = "messages_data_ibm-newsroom-en_d5"
+
+if data_name == "messages_data_ibm-newsroom-en_d5":
+    num_epochs = 100
+    save_samples = 10000  # save ckpt after num of samples seen (0=off)
+    checkpoint_at_epoch = False  # save ckpt after every epoch
+else:
+    # original
+    num_epochs = 3
+    save_samples = 0  # save ckpt after num of samples seen (0=off)
+    checkpoint_at_epoch = True  # save ckpt after every epoch
 
 messages_data_path = f"{data_name}.jsonl"
 
@@ -134,9 +145,6 @@ else:
 ckpt_output_dir = f"experiments/training_output-{model_name}-{data_name}"
 processed_data_dir = f"data/processed-data-{model_name}-{data_name}"
 
-num_epochs = 3  # original
-# num_epochs = 1  # NOTE time saver
-
 # %%
 force_process_data = False
 
@@ -191,8 +199,8 @@ train_args = TrainingArgs(
     effective_batch_size=256,  # target batch size per model update
     learning_rate=2e-5,
     warmup_steps=25,
-    save_samples=0,  # save ckpt after num of samples seen (0=off)
-    checkpoint_at_epoch=True,  # save ckpt after every epoch
+    save_samples=save_samples,  # save ckpt after num of samples seen (0=off)
+    checkpoint_at_epoch=checkpoint_at_epoch,  # save ckpt after every epoch
     accelerate_full_state_at_epoch=False,  # save full-state for resuming
     process_data=process_data,  # can set to false if data processed before
     distributed_backend=DistributedBackend.FSDP,
