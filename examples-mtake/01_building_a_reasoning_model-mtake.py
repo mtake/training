@@ -26,8 +26,9 @@ os.environ['TOKENIZERS_PARALLELISM'] = "false"
 # data_name = "messages_data_teigaku-genzei-ibm-v2"
 # data_name = "messages_data_teigaku-genzei-ibm-v3"
 # data_name = "messages_data_teigaku-genzei-ibm-v4-d5"
+data_name = "messages_data_teigaku-genzei-ibm-v5_d5"
 # data_name = "messages_data_ibm-newsroom-d5"
-data_name = "messages_data_ibm-newsroom-d5-x100"
+# data_name = "messages_data_ibm-newsroom-d5-x100"
 
 messages_data_path = f"{data_name}.jsonl"
 
