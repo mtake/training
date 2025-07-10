@@ -32,7 +32,7 @@ os.environ['TOKENIZERS_PARALLELISM'] = "false"
 data_name = "messages_data_ibm-newsroom-en_d5"
 
 if data_name == "messages_data_ibm-newsroom-en_d5":
-    num_epochs = 100
+    num_epochs = 200
     save_samples = 10000  # save ckpt after num of samples seen (0=off)
     checkpoint_at_epoch = False  # save ckpt after every epoch
 else:
