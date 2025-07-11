@@ -27,10 +27,10 @@ os.environ['TOKENIZERS_PARALLELISM'] = "false"
 # data_name = "messages_data_teigaku-genzei-ibm-v3"
 # data_name = "messages_data_teigaku-genzei-ibm-v4-d5"
 # data_name = "messages_data_teigaku-genzei-ibm-v5_d5"
-data_name = "messages_data_teigaku-genzei-ibm-v6_d5"
+# data_name = "messages_data_teigaku-genzei-ibm-v6_d5"
 # data_name = "messages_data_ibm-newsroom-d5"
 # data_name = "messages_data_ibm-newsroom-d5-x100"
-# data_name = "messages_data_ibm-newsroom-en_d5"
+data_name = "messages_data_ibm-newsroom-en_d5"
 
 if data_name == "messages_data_ibm-newsroom-en_d5":
     num_epochs = 200
