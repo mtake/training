@@ -33,14 +33,15 @@ os.environ['TOKENIZERS_PARALLELISM'] = "false"
 data_name = "messages_data_ibm-newsroom-en_d5"
 
 if data_name == "messages_data_ibm-newsroom-en_d5":
-    num_epochs = 200
+    # 699 samples
+    num_epochs = 100
     save_samples = 10000  # save ckpt after num of samples seen (0=off)
-    checkpoint_at_epoch = False  # save ckpt after every epoch
+    keep_last_checkpoint_only = True
 else:
     # original
     num_epochs = 3
     save_samples = 0  # save ckpt after num of samples seen (0=off)
-    checkpoint_at_epoch = True  # save ckpt after every epoch
+    keep_last_checkpoint_only = False
 
 messages_data_path = f"{data_name}.jsonl"
 
@@ -201,9 +202,10 @@ train_args = TrainingArgs(
     learning_rate=2e-5,
     warmup_steps=25,
     save_samples=save_samples,  # save ckpt after num of samples seen (0=off)
-    checkpoint_at_epoch=checkpoint_at_epoch,  # save ckpt after every epoch
+    checkpoint_at_epoch=True,  # save ckpt after every epoch
     accelerate_full_state_at_epoch=False,  # save full-state for resuming
     process_data=process_data,  # can set to false if data processed before
+    keep_last_checkpoint_only=keep_last_checkpoint_only,
     distributed_backend=DistributedBackend.FSDP,
     fsdp_options=FSDPOptions(cpu_offload_params=False),
 )
@@ -228,25 +230,29 @@ print("Finished training", flush=True)
 import glob
 import os
 
-# find trained model
-ckpt_dirs = glob.glob(f"{ckpt_output_dir}/hf_format/samples_*")
-samples_len = len("samples_")
-# print(ckpt_dirs)
-max_num_samples = -1
 trained_model_path = None
+
+# find the last checkpoint path
+# See https://github.com/instructlab/training/blob/4eb4173f2508dc1fd8db7e30b59609f0ceeb25ac/src/instructlab/training/config.py#L229
+ckpt_dirs = glob.glob(f"{ckpt_output_dir}/hf_format/last_epoch")
 for ckpt_dir in ckpt_dirs:
-    if not os.path.isdir(ckpt_dir):
-        continue
-    # print(ckpt_dir)
-    num_samples_str = os.path.basename(ckpt_dir)[samples_len:]
-    # print(num_samples_str)
-    try:
-        num_samples = int(num_samples_str)
-    except ValueError:
-        continue
-    if max_num_samples < num_samples:
-        max_num_samples = num_samples
-        trained_model_path = ckpt_dir
+    trained_model_path = ckpt_dir
+
+if trained_model_path is None:
+    ckpt_dirs = glob.glob(f"{ckpt_output_dir}/hf_format/samples_*")
+    samples_len = len("samples_")
+    max_num_samples = -1
+    for ckpt_dir in ckpt_dirs:
+        if not os.path.isdir(ckpt_dir):
+            continue
+        num_samples_str = os.path.basename(ckpt_dir)[samples_len:]
+        try:
+            num_samples = int(num_samples_str)
+        except ValueError:
+            continue
+        if max_num_samples < num_samples:
+            max_num_samples = num_samples
+            trained_model_path = ckpt_dir
 
 if trained_model_path is not None:
     from interpolator import interpolate_models
