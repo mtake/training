@@ -5,7 +5,7 @@ from transformers import AutoTokenizer, AutoModelForCausalLM
 def interpolate_models(
     model_path: str,
     trained_model_path: str,
-    trained_weight: float = 0.5,
+    trained_model_weight: float = 0.5,
     output_model_path: str | None = None,
     torch_dtype: str | None = "bfloat16",
 ) -> str:
@@ -22,9 +22,9 @@ def interpolate_models(
         **model_kwargs,
     )
     state_dict = model.state_dict()
-    original_weight = 1 - trained_weight
+    original_model_weight = 1 - trained_model_weight
     for key in state_dict.keys():
-        state_dict[key] = state_dict[key] * original_weight
+        state_dict[key] = state_dict[key] * original_model_weight
 
     # load trained model
     trained_model = AutoModelForCausalLM.from_pretrained(
@@ -33,7 +33,7 @@ def interpolate_models(
     )
     trained_state_dict = trained_model.state_dict()
     for key in state_dict.keys():
-        state_dict[key] += trained_state_dict[key] * trained_weight
+        state_dict[key] += trained_state_dict[key] * trained_model_weight
 
     # save interpolated model
     model.save_pretrained(output_model_path, state_dict=state_dict)
@@ -62,7 +62,7 @@ def parse_arguments():
         help="path to the trained model",
     )
     parser.add_argument(
-        "--trained_weight",
+        "--trained_model_weight",
         type=float,
         default=0.5,
         help="weight for the trained model",
@@ -87,14 +87,14 @@ def main():
     args = parse_arguments()
     model_path: str = args.model_path
     trained_model_path: str = args.trained_model_path
-    trained_weight: float = args.trained_weight
+    trained_model_weight: float = args.trained_model_weight
     output_model_path: str | None = args.output_model_path
     torch_dtype: str | None = args.torch_dtype
 
     interpolate_models(
         model_path,
         trained_model_path,
-        trained_weight=trained_weight,
+        trained_model_weight=trained_model_weight,
         output_model_path=output_model_path,
         torch_dtype=torch_dtype,
     )
