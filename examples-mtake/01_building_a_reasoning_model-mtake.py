@@ -21,7 +21,7 @@ os.environ['TOKENIZERS_PARALLELISM'] = "false"
 
 # %%
 # data_name = "nemotron"
-# data_name = "messages_data_teigaku-genzei"
+# data_name = "messages_data_teigaku-genzei"  # 14187 samples
 # data_name = "messages_data_teigaku-genzei-ibm-v0"
 # data_name = "messages_data_teigaku-genzei-ibm-v2"
 # data_name = "messages_data_teigaku-genzei-ibm-v3"
@@ -30,7 +30,8 @@ os.environ['TOKENIZERS_PARALLELISM'] = "false"
 # data_name = "messages_data_teigaku-genzei-ibm-v6_d5"
 # data_name = "messages_data_ibm-newsroom-d5"
 # data_name = "messages_data_ibm-newsroom-d5-x100"
-data_name = "messages_data_ibm-newsroom-en_d5"
+# data_name = "messages_data_ibm-newsroom-en_d5"  # 699 samples
+data_name = "messages_data_jfe-technical-report_r5"
 
 if data_name == "messages_data_ibm-newsroom-en_d5":
     # 699 samples
