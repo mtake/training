@@ -1,23 +1,32 @@
 # %% [markdown]
-# Below is an example recipe for training a model with reasoning traces, to become a "thinking model". In this example, we utilize Microsoft's `Phi-4-mini-instruct` and NVIDIA's Nemotron Post-Training Dataset for reasoning/non-reasoning traces.
+# # SFT with Japanese documents
 
 # %% [markdown]
-# # SFT: Warm Start for Reasoning
-# 
-# The first step in this process is to introduce Phi-4-mini-instruct to the structure and style of thought, in multiple contexts. We also want to keep the Nemotron method of reasoning-toggle-via-system-prompt, so we need the model to see examples of reasoning and non-reasoning responses, with detailed thinking on and detailed thinking off as corresponding system prompts.
-# 
-
-# %% [markdown]
-# ## Environment Variables
+# ## Environment variables
 
 # %%
 import os
 
 os.environ['PYTORCH_CUDA_ALLOC_CONF'] = "expandable_segments:True"
 os.environ['TOKENIZERS_PARALLELISM'] = "false"
+# os.environ['NCCL_DEBUG'] = "INFO"
 
 # %% [markdown]
-# ## Constants
+# ## Configure model
+
+# %%
+# from pathlib import Path
+
+# home = Path.home()
+# model_path = "microsoft/Phi-4-mini-instruct"
+# model_path = f"{home}/.cache/instructlab/models/granite-3.1-8b-lab-v1"
+# model_path = f"{home}/.cache/instructlab/models/granite-3.1-8b-lab-v2_rev-2"
+model_path = "ibm-granite/granite-3.3-8b-instruct"
+
+model_name = os.path.basename(model_path)
+
+# %% [markdown]
+# ## Configure data
 
 # %%
 # data_name = "nemotron"
@@ -33,6 +42,22 @@ os.environ['TOKENIZERS_PARALLELISM'] = "false"
 # data_name = "messages_data_ibm-newsroom-en_d5"  # 699 samples
 data_name = "messages_data_jfe-technical-report_r5"
 
+messages_data_path = f"{data_name}.jsonl"
+
+force_process_data = False
+
+# %% [markdown]
+# ## Configure data preparation
+
+# %%
+num_proc = 8
+
+force_prep_data = False
+
+# %% [markdown]
+# ## Configure fine-tuning
+
+# %%
 if data_name == "messages_data_ibm-newsroom-en_d5":
     # 699 samples
     num_epochs = 100
@@ -44,17 +69,16 @@ else:
     save_samples = 0  # save ckpt after num of samples seen (0=off)
     keep_last_checkpoint_only = False
 
-messages_data_path = f"{data_name}.jsonl"
+# %% [markdown]
+# ## Configure interpolation
+
+# %%
+trained_model_weight = 0.5
 
 # %% [markdown]
-# ## Data Preparation
+# ## Data preparation
 
 # %%
-prep_data_num_proc = 8
-
-# %%
-force_prep_data = False
-
 prep_data = not os.path.isfile(messages_data_path) or force_prep_data
 
 # %% [markdown]
@@ -85,17 +109,16 @@ def generalize_sample(sample):
     ]
     return {"messages": message_list}
 
-
-generic_samples_datasets = []
 if prep_data:
+    generic_samples_datasets = []
     for split in dataset.keys():
         print(f"Processing {split} samples", flush=True)
         new_split = dataset[split].filter(
-            lambda sample: sample["used_in_training"] == "yes", num_proc=prep_data_num_proc
+            lambda sample: sample["used_in_training"] == "yes", num_proc=num_proc
         )
         print(f"Adding {len(new_split)} samples", flush=True)
         new_samples = new_split.map(
-            generalize_sample, remove_columns=list(new_split[0].keys()), num_proc=prep_data_num_proc
+            generalize_sample, remove_columns=list(new_split[0].keys()), num_proc=num_proc
         )
         generic_samples_datasets.append(new_samples)
         print("Samples added\n", flush=True)
@@ -108,37 +131,26 @@ if prep_data:
     print("Writing generic messages-format data", flush=True)
     generic_samples = concatenate_datasets(generic_samples_datasets)
     print(generic_samples, flush=True)
-    generic_samples.to_json(messages_data_path, lines=True, orient="records", num_proc=prep_data_num_proc)
+    generic_samples.to_json(messages_data_path, lines=True, orient="records", num_proc=num_proc)
     print("Write complete!", flush=True)
 
 # %% [markdown]
 # This leaves us with 1.7 million samples of math, science, code, chat, and safety. This includes examples with and without detailed reasoning. With this file, we are ready to start SFT.
 
 # %% [markdown]
-# ## Fine-Tuning
+# ## Fine-tuning
 
 # %%
 import torch
 
 assert torch.cuda.is_available()
-# fine_tune_nproc_per_node = 8  # original
-fine_tune_nproc_per_node = torch.cuda.device_count()  # NOTE adjust to the available # of gpus
-print(f"fine_tune_nproc_per_node: {fine_tune_nproc_per_node}", flush=True)
+nproc_per_node = torch.cuda.device_count()
+print(f"nproc_per_node: {nproc_per_node}", flush=True)
 
-fine_tune_nnodes = 1
-print(f"fine_tune_nnodes: {fine_tune_nnodes}", flush=True)
+nnodes = 1
+print(f"nnodes: {nnodes}", flush=True)
 
 # %%
-from pathlib import Path
-home = Path.home()
-
-# model_path = "microsoft/Phi-4-mini-instruct"
-# model_path = f"{home}/.cache/instructlab/models/granite-3.1-8b-lab-v1"
-# model_path = f"{home}/.cache/instructlab/models/granite-3.1-8b-lab-v2_rev-2"
-model_path = "ibm-granite/granite-3.3-8b-instruct"
-
-model_name = os.path.basename(model_path)
-
 chat_tmpl_dir = "../src/instructlab/training/chat_templates"
 if "granite" in model_name:
     chat_tmpl_path = f"{chat_tmpl_dir}/ibm_generic_tmpl.py"
@@ -147,9 +159,6 @@ else:
 
 ckpt_output_dir = f"experiments/training_output-{model_name}-{data_name}"
 processed_data_dir = f"data/processed-data-{model_name}-{data_name}"
-
-# %%
-force_process_data = False
 
 process_data = not os.path.isfile(f"{processed_data_dir}/data.jsonl") or force_process_data
 
@@ -179,8 +188,8 @@ from instructlab.training.main_ds import run_training
 
 # %%
 torch_args = TorchrunArgs(
-    nproc_per_node=fine_tune_nproc_per_node,
-    nnodes=fine_tune_nnodes,
+    nproc_per_node=nproc_per_node,
+    nnodes=nnodes,
     node_rank=0,
     rdzv_id=123,
     rdzv_endpoint="0.0.0.0:8888",
@@ -222,10 +231,17 @@ run_training(torch_args=torch_args,train_args=train_args)
 print("Finished training", flush=True)
 
 # %% [markdown]
-# Upon completion, we have n (n=num_epochs) Huggingface-Format checkpoints in `experiments/training_output/hf_format`. The full run logs and metrics will also be recorded in `experiments/training_output`. Running the final training as a python script rather than in a notebook may help with progress bar writing to stdout.
+# Upon completion, we have `{num_epochs}` Huggingface-Format checkpoints in `{ckpt_output_dir}/hf_format`. The full run logs and metrics will also be recorded in `{ckpt_output_dir}`. Running the final training as a python script rather than in a notebook may help with progress bar writing to stdout.
 
 # %% [markdown]
 # ## Interpolation
+# 
+# When the training is completed successfully, we will interpolate the last checkpoint to recover the capability of the original model that may have been lost during the training process.
+# 
+# We can also interpolate the checkpoint manually as follows.
+# ```sh
+# python interpolator.py --model_path {model_path} --trained_model_path {ckpt_output_dir}/hf_format/samples_123456 --trained_model_weight {trained_model_weight}
+# ```
 
 # %%
 import glob
@@ -233,7 +249,7 @@ import os
 
 trained_model_path = None
 
-# find the last checkpoint path
+# First, find the last checkpoint path
 # See https://github.com/instructlab/training/blob/4eb4173f2508dc1fd8db7e30b59609f0ceeb25ac/src/instructlab/training/config.py#L229
 ckpt_dirs = glob.glob(f"{ckpt_output_dir}/hf_format/last_epoch")
 for ckpt_dir in ckpt_dirs:
@@ -255,12 +271,13 @@ if trained_model_path is None:
             max_num_samples = num_samples
             trained_model_path = ckpt_dir
 
+# Then, interpolate the last checkpoint with the original model
 if trained_model_path is not None:
     from interpolator import interpolate_models
 
     print(f"Trained model path: {trained_model_path}")
 
-    output_model_path = interpolate_models(model_path, trained_model_path)
+    output_model_path = interpolate_models(model_path, trained_model_path, trained_model_weight=trained_model_weight)
 
     print(f"Output model path: {output_model_path}")
 
