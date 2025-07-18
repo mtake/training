@@ -1,5 +1,5 @@
 # %% [markdown]
-# # SFT with Japanese documents
+# # Building a model for Japanese
 
 # %% [markdown]
 # ## Environment variables
