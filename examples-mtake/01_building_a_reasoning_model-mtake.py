@@ -246,7 +246,7 @@ print("Finished training", flush=True)
 # %%
 import glob
 
-def find_last_checkpoint(ckpt_output_dir: str) -> str:
+def find_last_checkpoint(ckpt_output_dir: str) -> str | None:
     last_checkpoint_path = None
 
     # For keep_last_checkpoint_only is True
