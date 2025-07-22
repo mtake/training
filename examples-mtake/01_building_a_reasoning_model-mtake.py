@@ -61,12 +61,12 @@ force_prep_data = False
 if data_name == "messages_data_ibm-newsroom-en_d5":
     # 699 samples
     num_epochs = 100
-    save_samples = 10000  # save ckpt after num of samples seen (0=off)
+    save_samples = 10000
     keep_last_checkpoint_only = True
 else:
     # original
     num_epochs = 3
-    save_samples = 0  # save ckpt after num of samples seen (0=off)
+    save_samples = 0
     keep_last_checkpoint_only = False
 
 # %% [markdown]
@@ -245,33 +245,38 @@ print("Finished training", flush=True)
 
 # %%
 import glob
-import os
 
-trained_model_path = None
+def find_last_checkpoint(ckpt_output_dir: str) -> str:
+    last_checkpoint_path = None
 
-# First, find the last checkpoint path
-# See https://github.com/instructlab/training/blob/4eb4173f2508dc1fd8db7e30b59609f0ceeb25ac/src/instructlab/training/config.py#L229
-ckpt_dirs = glob.glob(f"{ckpt_output_dir}/hf_format/last_epoch")
-for ckpt_dir in ckpt_dirs:
-    trained_model_path = ckpt_dir
-
-if trained_model_path is None:
-    ckpt_dirs = glob.glob(f"{ckpt_output_dir}/hf_format/samples_*")
-    samples_len = len("samples_")
-    max_num_samples = -1
+    # For keep_last_checkpoint_only is True
+    # See https://github.com/instructlab/training/blob/4eb4173f2508dc1fd8db7e30b59609f0ceeb25ac/src/instructlab/training/config.py#L229
+    ckpt_dirs = glob.glob(f"{ckpt_output_dir}/hf_format/last_epoch")
     for ckpt_dir in ckpt_dirs:
-        if not os.path.isdir(ckpt_dir):
-            continue
-        num_samples_str = os.path.basename(ckpt_dir)[samples_len:]
-        try:
-            num_samples = int(num_samples_str)
-        except ValueError:
-            continue
-        if max_num_samples < num_samples:
-            max_num_samples = num_samples
-            trained_model_path = ckpt_dir
+        last_checkpoint_path = ckpt_dir
 
-# Then, interpolate the last checkpoint with the original model
+    # For keep_last_checkpoint_only is False
+    if last_checkpoint_path is None:
+        ckpt_dirs = glob.glob(f"{ckpt_output_dir}/hf_format/samples_*")
+        samples_len = len("samples_")
+        max_num_samples = -1
+        for ckpt_dir in ckpt_dirs:
+            if not os.path.isdir(ckpt_dir):
+                continue
+            num_samples_str = os.path.basename(ckpt_dir)[samples_len:]
+            try:
+                num_samples = int(num_samples_str)
+            except ValueError:
+                continue
+            if max_num_samples < num_samples:
+                max_num_samples = num_samples
+                last_checkpoint_path = ckpt_dir
+
+    return last_checkpoint_path
+
+# %%
+trained_model_path = find_last_checkpoint(ckpt_output_dir)
+
 if trained_model_path is not None:
     from interpolator import interpolate_models
 
