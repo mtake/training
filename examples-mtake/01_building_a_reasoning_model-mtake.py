@@ -1,5 +1,5 @@
 # %% [markdown]
-# # Fine-tuning a model with Interpolation
+# # Building a model with fine-tuning and interpolation
 
 # %% [markdown]
 # ## Environment variables
