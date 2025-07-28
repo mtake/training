@@ -15,12 +15,9 @@ os.environ['TOKENIZERS_PARALLELISM'] = "false"
 # ## Configure model
 
 # %%
-# from pathlib import Path
-
-# home = Path.home()
 # model_path = "microsoft/Phi-4-mini-instruct"
-# model_path = f"{home}/.cache/instructlab/models/granite-3.1-8b-lab-v1"
-# model_path = f"{home}/.cache/instructlab/models/granite-3.1-8b-lab-v2_rev-2"
+# model_path = "checkpoints/granite-3.1-8b-lab-v1"
+# model_path = "checkpoints/granite-3.1-8b-lab-v2_rev-2"
 model_path = "ibm-granite/granite-3.3-8b-instruct"
 
 model_name = os.path.basename(model_path)
