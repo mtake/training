@@ -24,6 +24,8 @@ model_name = os.path.basename(model_path)
 
 # %% [markdown]
 # ## Configure data
+# 
+# Configure `data_name` such that the message data file is `message_data_${data_name}.jsonl`.
 
 # %%
 # data_name = "nemotron"
