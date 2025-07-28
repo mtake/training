@@ -1,5 +1,5 @@
 # %% [markdown]
-# # Building a model for Japanese
+# # Fine-tuning a model with Interpolation
 
 # %% [markdown]
 # ## Environment variables
@@ -237,11 +237,11 @@ print("Finished training", flush=True)
 # %% [markdown]
 # ## Interpolation
 # 
-# When the training is completed successfully, we will interpolate the last checkpoint to recover the capability of the original model that may have been lost during the training process.
+# When the training is completed successfully, we will interpolate the last checkpoint with the original model to recover the capability that may have been lost during the training process. `{output_model_path}` will be `{trained_model_path}-interp` by default.
 # 
-# We can also interpolate the checkpoint manually as follows.
+# We can also interpolate models manually as follows.
 # ```sh
-# python interpolator.py --model_path {model_path} --trained_model_path {ckpt_output_dir}/hf_format/samples_123456 --trained_model_weight {trained_model_weight}
+# python interpolator.py --model_path {model_path} --trained_model_path {trained_model_path} --trained_model_weight {trained_model_weight}
 # ```
 
 # %%
