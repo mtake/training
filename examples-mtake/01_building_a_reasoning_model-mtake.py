@@ -27,19 +27,21 @@ model_name = os.path.basename(model_path)
 
 # %%
 # data_name = "nemotron"
-# data_name = "messages_data_teigaku-genzei"  # 14187 samples
-# data_name = "messages_data_teigaku-genzei-ibm-v0"
-# data_name = "messages_data_teigaku-genzei-ibm-v2"
-# data_name = "messages_data_teigaku-genzei-ibm-v3"
-# data_name = "messages_data_teigaku-genzei-ibm-v4-d5"
-# data_name = "messages_data_teigaku-genzei-ibm-v5_d5"
-# data_name = "messages_data_teigaku-genzei-ibm-v6_d5"
-# data_name = "messages_data_ibm-newsroom-d5"
-# data_name = "messages_data_ibm-newsroom-d5-x100"
-# data_name = "messages_data_ibm-newsroom-en_d5"  # 699 samples
-data_name = "messages_data_jfe-technical-report_r5"
+# data_name = "teigaku-genzei"  # 14187 samples
+# data_name = "teigaku-genzei-ibm-v0"
+# data_name = "teigaku-genzei-ibm-v2"
+# data_name = "teigaku-genzei-ibm-v3"
+# data_name = "teigaku-genzei-ibm-v4-d5"
+# data_name = "teigaku-genzei-ibm-v5_d5"
+# data_name = "data_teigaku-genzei-ibm-v6_d5"
+# data_name = "ibm-newsroom-d5"
+# data_name = "ibm-newsroom-d5-x100"
+# data_name = "ibm-newsroom-en_d5"  # 699 samples
+data_name = "jfe-technical-report_r5"
 
-messages_data_path = f"{data_name}.jsonl"
+_data_name = f"_{data_name}" if data_name is not None and len(data_name) > 0 else ""
+
+messages_data_path = f"messages_data{_data_name}.jsonl"
 
 force_process_data = False
 
@@ -55,7 +57,7 @@ force_prep_data = False
 # ## Configure fine-tuning
 
 # %%
-if data_name == "messages_data_ibm-newsroom-en_d5":
+if data_name == "ibm-newsroom-en_d5":
     # 699 samples
     num_epochs = 100
     save_samples = 10000
@@ -154,8 +156,8 @@ if "granite" in model_name:
 else:
     chat_tmpl_path = None
 
-ckpt_output_dir = f"experiments/training_output-{model_name}-{data_name}"
-processed_data_dir = f"data/processed-data-{model_name}-{data_name}"
+ckpt_output_dir = f"experiments/training_output-{model_name}{_data_name}"
+processed_data_dir = f"data/processed-data-{model_name}{_data_name}"
 
 process_data = not os.path.isfile(f"{processed_data_dir}/data.jsonl") or force_process_data
 
