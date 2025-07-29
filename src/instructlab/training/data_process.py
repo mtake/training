@@ -340,9 +340,6 @@ def process_messages_into_input_ids_with_chat_template(args: DataProcessArgs):
         args.max_seq_len,
         num_dropped_samples,
     )
-    # @@@ahoaho XXX
-    # NOTE fix formatting error in the original code
-    # logger.info("({:.2f}% of total)", ((num_dropped_samples / len(lens)) * 100))
     logger.info("(%.2f%% of total)", ((num_dropped_samples / len(lens)) * 100))
     if num_dropped_samples == len(data):
         raise RuntimeError(
