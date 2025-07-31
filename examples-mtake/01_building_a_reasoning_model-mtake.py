@@ -30,6 +30,7 @@ model_name = os.path.basename(model_path)
 # %%
 # data_name = "nemotron"
 # data_name = "teigaku-genzei"  # 14187 samples
+# data_name = "teigaku-genzei-ibm_generic_tmpl"  # 14187 samples
 # data_name = "teigaku-genzei-ibm-v0"
 # data_name = "teigaku-genzei-ibm-v2"
 # data_name = "teigaku-genzei-ibm-v3"
