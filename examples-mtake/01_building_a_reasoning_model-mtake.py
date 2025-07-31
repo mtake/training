@@ -7,8 +7,8 @@
 # %%
 import os
 
-os.environ['PYTORCH_CUDA_ALLOC_CONF'] = "expandable_segments:True"
-os.environ['TOKENIZERS_PARALLELISM'] = "false"
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 # os.environ['NCCL_DEBUG'] = "INFO"
 
 # %% [markdown]
