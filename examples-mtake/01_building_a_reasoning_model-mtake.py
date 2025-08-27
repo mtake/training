@@ -31,6 +31,7 @@ model_name = os.path.basename(model_path)
 # data_name = "nemotron"
 # data_name = "teigaku-genzei"  # 14187 samples
 # data_name = "teigaku-genzei-ibm_generic_tmpl"  # 14187 samples
+data_name = "teigaku-genzei-sdg_hub_v0.2"  # 18922 samples
 # data_name = "teigaku-genzei-ibm-v0"
 # data_name = "teigaku-genzei-ibm-v2"
 # data_name = "teigaku-genzei-ibm-v3"
@@ -40,7 +41,7 @@ model_name = os.path.basename(model_path)
 # data_name = "ibm-newsroom-d5"
 # data_name = "ibm-newsroom-d5-x100"
 # data_name = "ibm-newsroom-en_d5"  # 699 samples
-data_name = "jfe-technical-report_r5"
+# data_name = "jfe-technical-report_r5"
 
 _data_name = f"_{data_name}" if data_name is not None and len(data_name) > 0 else ""
 
