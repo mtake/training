@@ -27,6 +27,7 @@ ORIG="ibm-granite/granite-3.3-8b-instruct"
 TRAINED="experiments/training_output-granite-3.3-8b-instruct_teigaku-genzei-ibm-v6/hf_format/samples_49751"
 #TRAINED="experiments/training_output-granite-3.3-8b-instruct-messages_data_ibm-newsroom-d5/hf_format/samples_774"
 #TRAINED="experiments/training_output-granite-3.3-8b-instruct-messages_data_ibm-newsroom-en_d5/hf_format/last_epoch"
+#TRAINED="experiments/training_output-granite-3.3-8b-instruct_teigaku-genzei-v0.2/hf_format/samples_55041"
 INTERPOLATED="${TRAINED}-interp"
 
 MODEL_PATH="${ORIG}"
