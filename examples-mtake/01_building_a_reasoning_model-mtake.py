@@ -155,11 +155,13 @@ nnodes = 1
 print(f"nnodes: {nnodes}", flush=True)
 
 # %%
-chat_tmpl_dir = "../src/instructlab/training/chat_templates"
-if "granite" in model_name:
-    chat_tmpl_path = f"{chat_tmpl_dir}/ibm_generic_tmpl.py"
-else:
-    chat_tmpl_path = None
+# @@@ahoaho XXX
+# chat_tmpl_dir = "../src/instructlab/training/chat_templates"  # instructlab bundled chat template
+# if "granite" in model_name:
+#     chat_tmpl_path = f"{chat_tmpl_dir}/ibm_generic_tmpl.py"
+# else:
+#     chat_tmpl_path = None
+chat_tmpl_path = None  # model builtin chat template
 
 ckpt_output_dir = f"experiments/training_output-{model_name}{_data_name}"
 processed_data_dir = f"data/processed-data-{model_name}{_data_name}"
